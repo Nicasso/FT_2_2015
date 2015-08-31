@@ -9,7 +9,9 @@ lastDigit x = read ([last (show x)])
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer
-dropLastDigit x = read (init (show x))
+dropLastDigit x = if x >= 10 
+                  then read (init (show x))
+                  else 0
 
 -- Exercise 2 -----------------------------------------
 
@@ -20,7 +22,12 @@ toRevDigits = undefined
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther = undefined
+doubleEveryOther x = doubleEveryOtherHelper (zip [1..4] x)
+
+doubleEveryOtherHelper :: [(Integer, Integer)] -> [Integer]
+doubleEveryOtherHelper [] = []
+doubleEveryOtherHelper (x:xs) | even (fst x) = [(snd x)*2] ++ doubleEveryOtherHelper xs
+                              | odd (fst x) = [(snd x)] ++ doubleEveryOtherHelper xs
 
 -- Exercise 4 -----------------------------------------
 

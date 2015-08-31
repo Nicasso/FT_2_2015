@@ -5,7 +5,10 @@ module HW01 where
 
 -- Get the last digit from a number
 lastDigit :: Integer -> Integer
-lastDigit = undefined
+lastDigit x = read (getLastChar (show x))
+
+getLastChar :: String -> String
+getLastChar x = [last x]
 
 -- Drop the last digit from a number
 dropLastDigit :: Integer -> Integer

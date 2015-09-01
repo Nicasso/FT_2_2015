@@ -16,7 +16,7 @@ dropLastDigit x = if x >= 10
 -- Exercise 2 -----------------------------------------
 
 toRevDigits :: Integer -> [Integer]
-toRevDigits = undefined
+toRevDigits x = while x /< 1 
 
 -- Exercise 3 -----------------------------------------
 

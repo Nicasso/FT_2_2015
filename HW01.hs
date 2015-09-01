@@ -16,13 +16,16 @@ dropLastDigit x = if x >= 10
 -- Exercise 2 -----------------------------------------
 
 toRevDigits :: Integer -> [Integer]
-toRevDigits = undefined
+toRevDigits 0 = []
+toRevDigits x = if x > 0 
+                then reverse ( map (\x -> read [x] :: Integer) (show x) ) 
+                else []
 
 -- Exercise 3 -----------------------------------------
 
 -- Double every second number in a list starting on the left.
 doubleEveryOther :: [Integer] -> [Integer]
-doubleEveryOther x = doubleEveryOtherHelper (zip [1..4] x)
+doubleEveryOther x = doubleEveryOtherHelper (zip [1..] x)
 
 doubleEveryOtherHelper :: [(Integer, Integer)] -> [Integer]
 doubleEveryOtherHelper [] = []
@@ -33,14 +36,15 @@ doubleEveryOtherHelper (x:xs) | even (fst x) = [(snd x)*2] ++ doubleEveryOtherHe
 
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
-sumDigits = undefined
-
+sumDigits [] = 0
+sumDigits (x:xs) = sum (map (\x -> read [x] :: Integer) (show x)) + sumDigits xs
 
 -- Exercise 5 -----------------------------------------
 
 -- Validate a credit card number using the above functions.
+
 luhn :: Integer -> Bool
-luhn = undefined
+luhn x = rem (sumDigits(doubleEveryOther(toRevDigits x))) 10 == 0
 
 -- Exercise 6 -----------------------------------------
 

@@ -30,7 +30,7 @@ dropLastDigit x = if x >= 10
 toRevDigits :: Integer -> [Integer]
 toRevDigits 0 = []
 toRevDigits x = if x > 0 
-                then reverse ( map (\x -> read [x] :: Integer) (show x) ) 
+                then reverse ( map (\y -> read [y] :: Integer) (show x) ) 
                 else []
 
 --ANDRE T. VERSION--
@@ -51,6 +51,7 @@ doubleEveryOtherHelper :: [(Integer, Integer)] -> [Integer]
 doubleEveryOtherHelper [] = []
 doubleEveryOtherHelper (x:xs) | even (fst x) = [(snd x)*2] ++ doubleEveryOtherHelper xs
                               | odd (fst x) = [(snd x)] ++ doubleEveryOtherHelper xs
+                              | otherwise = []
 --ANDRE T. VERSION--
 --doubleEveryOther :: [Integer] -> [Integer]
 --doubleEveryOther [] = []
@@ -61,7 +62,7 @@ doubleEveryOtherHelper (x:xs) | even (fst x) = [(snd x)*2] ++ doubleEveryOtherHe
 -- Calculate the sum of all the digits in every Integer.
 sumDigits :: [Integer] -> Integer
 sumDigits [] = 0
-sumDigits (x:xs) = sum (map (\x -> read [x] :: Integer) (show x)) + sumDigits xs
+sumDigits (x:xs) = sum (map (\y -> read [y] :: Integer) (show x)) + sumDigits xs
 
 --ANDRE T. VERSION--
 --sumDigits :: [Integer] -> Integer

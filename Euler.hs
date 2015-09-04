@@ -2,8 +2,7 @@
 pythagorean :: [(Integer, Integer, Integer)]
 pythagorean = [ (x, y, z) | z <- [1 .. 1000], y <- [1 .. z], x <- [1 .. y], (x^2 + y^2 == z^2) && (x + y + z == 1000)]
 
--- Problem 10: 
-
+-- Problem 10: Summation of primes
 primes0 :: Integer
 primes0 = sum(filter prime0 [2..1999999])
 
@@ -22,5 +21,5 @@ ldf k n | divides k n = k
 
 divides :: Integer -> Integer -> Bool
 divides d n = rem n d == 0
-=======
->>>>>>> origin/master
+
+-- Problem 49: Prime permutations

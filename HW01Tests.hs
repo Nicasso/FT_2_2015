@@ -1,6 +1,5 @@
--- CIS 194, Spring 2015
---
--- Test cases for HW 01
+-- Week 1: HW01Tests.hs
+-- FT_02: Nico de Groot, Robin Kulhan, Andre Tavares
 
 module HW01Tests where
 

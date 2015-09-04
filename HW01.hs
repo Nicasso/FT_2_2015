@@ -1,3 +1,6 @@
+-- Week 1: HW01.hs
+-- FT_02: Nico de Groot, Robin Kulhan, Andre Tavares
+
 {-# OPTIONS_GHC -Wall #-}
 module HW01 where
 
@@ -27,6 +30,7 @@ dropLastDigit x = if x >= 10
 
 -- Exercise 2 -----------------------------------------
 
+-- Turn number into reversed list of digits
 toRevDigits :: Integer -> [Integer]
 toRevDigits 0 = []
 toRevDigits x = if x > 0 
@@ -47,6 +51,7 @@ toRevDigits x = if x > 0
 doubleEveryOther :: [Integer] -> [Integer]
 doubleEveryOther x = doubleEveryOtherHelper (zip [1..] x)
 
+-- Checks if first Int is even or odd to check position, doubles the second Int if the first is even, then returns
 doubleEveryOtherHelper :: [(Integer, Integer)] -> [Integer]
 doubleEveryOtherHelper [] = []
 doubleEveryOtherHelper (x:xs) | even (fst x) = [(snd x)*2] ++ doubleEveryOtherHelper xs
@@ -81,12 +86,3 @@ sumDigits (x:xs) = sum (map (\y -> read [y] :: Integer) (show x)) + sumDigits xs
 -- Validate a credit card number using the above functions.
 luhn :: Integer -> Bool
 luhn x = rem (sumDigits(doubleEveryOther(toRevDigits x))) 10 == 0
-
--- Exercise 6 -----------------------------------------
-
--- Towers of Hanoi for three pegs
-type Peg = String
-type Move = (Peg, Peg)
-
-hanoi :: Integer -> Peg -> Peg -> Peg -> [Move]
-hanoi = undefined

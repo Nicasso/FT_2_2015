@@ -15,9 +15,9 @@ triangle  a b c | not((a + b > c) && (b + c > a) && (c + a > b)) = NoTriangle
                 | otherwise = Other
 
 -- ANDRE T. VERSION
---triangle x y z  | ((x + y <= z) || (x + z <= y) || (z + y <= x)) = NoTriangle
---				| (x == y) && (x == z) = Equilateral 
---				| (((x == y) && (x /= z)) || ((x == z) && (x /= y)) || ((y == z) && (y /= x))) = Isosceles	
---				| (x^2 + y^2 == z^2) || (z^2 + y^2 == x^2) || (x^2 + z^2 == y^2) = Rectangular		
---				| otherwise = Other
+triangleA x y z  | ((x + y <= z) || (x + z <= y) || (z + y <= x)) = NoTriangle
+				 | (x == y) && (x == z) = Equilateral 
+				 | (((x == y) && (x /= z)) || ((x == z) && (x /= y)) || ((y == z) && (y /= x))) = Isosceles	
+				 | (x^2 + y^2 == z^2) || (z^2 + y^2 == x^2) || (x^2 + z^2 == y^2) = Rectangular		
+				 | otherwise = Other
 -------------------

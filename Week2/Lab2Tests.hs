@@ -4,24 +4,31 @@ import Lab2
 import Testing
 import System.Random
 
--- Testing recognize triangles
+-- Testing recognize triangles ------------------------------------
 
 testTriangle :: (Integer, Integer, Integer, Shape) -> Bool
 testTriangle (x, y, z, s) = (triangleA x y z == s)
 
 triangleTests :: [Test]
 triangleTests = [ Test "triangle test" testTriangle
-             [(1, 2, 3, NoTriangle), (1, 1, 1, Equilateral), (1, 2, 2, Isosceles), (8, 6, 10, Rectangular), (3, 5, 7, Other)]]
--- 
+             [(1, 2, 3, NoTriangle), (1, 1, 1, Equilateral), 
+              (1, 2, 2, Isosceles), (8, 6, 10, Rectangular), 
+              (3, 5, 7, Other)]]
 
--- Permutations Testing
+-- Permutations Testing -------------------------------------------
 
 -- Preconditions: 
--- List have the same length
+-- 2 lists of random non-repeated elements, with the same length 
 
 -- Postconditions: 
--- List has the same length
--- Elements don't stand on the same
+-- True if is a permutation, False otherwise
+
+----
+
+-- Can we automate the test process?
+--
+-- Yes, we can randomly generate 2 lists of non-repeated 
+-- elements with the same length and ...
 
 genIntList2 :: IO [Int]
 genIntList2 = do 
@@ -74,6 +81,12 @@ testPermutations x y z | isPermutation x y == z = True--print ("Pass on "+ x)
                        | otherwise = False--print ("Failed test on "+ x)
 
 -- Testing IBAN validation -----------------------------------------------
+
+-- Preconditions: 
+-- Any string 
+
+-- Postconditions: 
+-- True if is a correct iban number, False otherwise
 
 testIban :: (String, Bool) -> Bool
 testIban (s, b) = iban s == b

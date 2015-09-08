@@ -45,3 +45,62 @@ testR k n f r = if k == n then print (show n ++ " tests passed")
 
 testPost :: ([Int] -> [Int]) -> ([Int] -> Bool) -> IO ()
 testPost f p = testR 1 100 f (\_ -> p)
+
+-- Permutations Testing
+
+-- Preconditions: 
+-- List have the same length
+
+-- Postconditions: 
+-- List has the same length
+-- Elements don't stand on the same
+
+genIntList2 :: IO [Int]
+genIntList2 = do 
+  k <- getRandomInt 10
+  n <- getRandomInt 10
+  getIntL2 k n
+
+getIntL2 :: Int -> Int -> IO [Int]
+getIntL2 _ 0 = return []
+getIntL2 k n = do 
+   x <-  getRandomInt k
+   y <- randomFlip x
+   xs <- getIntL2 k (n-1)
+   if elem y xs then
+    do
+   return (xs)
+   else
+    do
+   return (y:xs)
+
+startPerms :: [Integer]
+startPerms = undefined
+
+initTestPermutations :: [[Integer]]
+initTestPermutations = perms [1..100]
+
+testTwoPermutations :: [[Integer]] -> IO ()
+testTwoPermutations [] = print ("ÉMPTY")
+testTwoPermutations (x:xs) = if (testPermutations x (head xs) True == True) then
+  do
+    print ("Success")
+    if length xs >= 2 then 
+      do
+        testTwoPermutations xs
+      else 
+        print ("DONE")
+  else 
+    do
+    print ("Failure")
+    if length xs >= 2 then 
+      do
+        testTwoPermutations xs
+      else 
+        print ("WTF2")
+
+testPermutations :: Eq a => [a] -> [a] -> Bool -> Bool
+testPermutations x y z | isPermutation x y == z = True--print ("Pass on "+ x)
+                       | otherwise = False--print ("Failed test on "+ x)
+
+

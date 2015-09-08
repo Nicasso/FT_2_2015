@@ -2,6 +2,9 @@ module Lab2 where
  
 import Data.List
 import System.Random
+import Data.Char
+
+-- Recognizing triangles
 
 data Shape = NoTriangle | Equilateral 
             | Isosceles | Rectangular | Other deriving (Eq,Show)
@@ -21,10 +24,30 @@ triangleA x y z  | ((x + y <= z) || (x + z <= y) || (z + y <= x)) = NoTriangle
          | (x^2 + y^2 == z^2) || (z^2 + y^2 == x^2) || (x^2 + z^2 == y^2) = Rectangular   
          | otherwise = Other
 
+-- Recognizing Permutations
+
 isPermutation :: Eq a => [a] -> [a] -> Bool
 isPermutation a b = elem a (permutations b)
 
--- IBAN
+-- Recognizing and generating derangements
+
+isDerangement :: Eq a => [a] -> [a] -> Bool
+isDerangement [] [] = True
+isDerangement xs ys = and [ elem x ys && (index x xs /= index x ys) | x <- xs ] where
+     index n (x:xs) | n == x = 0
+                    | otherwise = 1 + index n xs
+
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = concat (map (insrt x) (perms xs)) where
+  insrt x [] = [[x]]
+  insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)
+
+deran :: Integer -> [[Integer]]
+deran n = filter (\ x -> isDerangement x [0..n-1]) (perms [0..n-1])
+
+-- Implementing and testing IBAN validation
+
 iban :: String -> Bool
 iban x = (validateCheckDigit(convertIntoNumerics(moveFourCharacters(trim(x)))))
 

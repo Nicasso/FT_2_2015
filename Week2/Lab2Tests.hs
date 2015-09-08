@@ -84,15 +84,15 @@ testTwoPermutations :: [[Integer]] -> IO ()
 testTwoPermutations [] = print ("ÉMPTY")
 testTwoPermutations (x:xs) = if (testPermutations x (head xs) True == True) then
   do
-    print ("Success")
+    print ("Passed on: "++show x++" & "++show (head xs))
     if length xs >= 2 then 
       do
         testTwoPermutations xs
       else 
-        print ("DONE")
+        print ("Done")
   else 
     do
-    print ("Failure")
+    print ("Failed on: "++show x++" & "++show (head xs))
     if length xs >= 2 then 
       do
         testTwoPermutations xs

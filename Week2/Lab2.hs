@@ -43,3 +43,27 @@ convertIntoNumerics (x:xs) | isLetter x = show(ord x - 55) ++ convertIntoNumeric
                            
 validateCheckDigit :: [Char] -> Bool
 validateCheckDigit x = ((read x) `mod` 97) == 1
+
+isDerangement :: [Integer] -> [Integer] -> Bool
+isDerangement a b = isPermutation a b && notEqualElemsByIndex a b
+
+--deran :: [Integer] -> [[Integer]]
+--deran [] = [[]]
+--deran (x:xs) = 	concat (map (insrt x) (perms xs)) where
+--				insrt x [] = [[x]]
+--				insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys) 
+
+notEqualElemsByIndex :: [Integer] -> [Integer] -> Bool
+notEqualElemsByIndex [] [] = True
+notEqualElemsByIndex (x:xs) (y:ys) = x /= y && notEqualElemsByIndex xs ys
+
+perms :: [a] ->[[a]]
+perms [] = [[]]
+perms (x:xs) = 	concat (map (insrt x) (perms xs)) where
+				insrt x [] = [[x]]
+				insrt x (y:ys) = (x:y:ys) : map (y:) (insrt x ys)	
+
+merge :: [a] -> [a] -> [a]
+merge xs     []     = xs
+merge []     ys     = ys
+merge (x:xs) (y:ys) = x : y : merge xs ys 

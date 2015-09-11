@@ -75,6 +75,39 @@ testPermutations :: Eq a => [a] -> [a] -> Bool -> Bool
 testPermutations x y z | isPermutation x y == z = True
                        | otherwise = False
 
+-- isDerangment testing
+
+testIsDerangement :: IO ()
+testIsDerangement = loopTestIsDerangement 0 100
+
+loopTestIsDerangement :: Int -> Int -> IO ()
+loopTestIsDerangement x y = do 
+  n <- genUniqueIntList
+  if length n >= 2 then do 
+    testTwoDerangements (buildValidDeran n)
+    if (x+1) < y then do 
+      loopTestIsDerangement (x+1) y
+    else 
+      print ( show (x+1) ++ " test passed")
+  else 
+    loopTestIsDerangement x y
+
+buildValidDeran :: Ord a => Eq a => [a] -> [[a]]
+buildValidDeran (x:xs) = [(x:xs)]++[xs++[x]]
+
+testTwoDerangements :: Eq a => Show a => [[a]] -> IO ()
+testTwoDerangements [] = print ("Nope")
+testTwoDerangements (x:xs) = if (testDerangement x (head xs) True == True) then
+    do
+      print ("Passed on: "++show x++" & "++show (head xs))
+    else 
+      do
+      error ("Failed on: "++show x++" & "++show (head xs))
+
+testDerangement :: Eq a => [a] -> [a] -> Bool -> Bool
+testDerangement x y z | isDerangement x y == z = True
+                      | otherwise = False
+
 -- Testing IBAN validation -----------------------------------------------
 
 -- Preconditions: 

@@ -36,9 +36,9 @@ isPermutation xs (y:ys) | length xs /= length (y:ys) = False
 
 isDerangement :: Eq a => [a] -> [a] -> Bool
 isDerangement [] [] = True
-isDerangement xs ys = and [ elem x ys && (index x xs /= index x ys) | x <- xs ] where
-     index n (x:xs) | n == x = 0
-                    | otherwise = 1 + index n xs
+isDerangement xs ys = and [ (x `elem` ys && (index x xs /= index x ys)) && (length xs == length ys) | x <- xs ] where
+      index n (x:xs) | n == x = 0
+                     | otherwise = 1 + index n xs
 
 perms :: Ord a => [a] ->[[a]]
 perms [] = [[]]

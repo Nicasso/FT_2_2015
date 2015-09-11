@@ -27,7 +27,10 @@ triangleA x y z  | ((x + y <= z) || (x + z <= y) || (z + y <= x)) = NoTriangle
 -- Recognizing Permutations
 
 isPermutation :: Eq a => [a] -> [a] -> Bool
-isPermutation a b = elem a (permutations b)
+isPermutation [] [] = True
+isPermutation xs (y:ys) | length xs /= length (y:ys) = False
+                        | length xs == 1 && (head xs /= head (y:ys)) = False
+                        | otherwise = isPermutation (delete y xs) ys
 
 -- Recognizing and generating derangements
 

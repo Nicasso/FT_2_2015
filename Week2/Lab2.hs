@@ -37,7 +37,7 @@ isDerangement xs ys = and [ elem x ys && (index x xs /= index x ys) | x <- xs ] 
      index n (x:xs) | n == x = 0
                     | otherwise = 1 + index n xs
 
-perms :: [a] ->[[a]]
+perms :: Ord a => [a] ->[[a]]
 perms [] = [[]]
 perms (x:xs) = concat (map (insrt x) (perms xs)) where
   insrt x [] = [[x]]

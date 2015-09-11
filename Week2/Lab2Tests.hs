@@ -48,25 +48,18 @@ testPost f p = testR 1 100 f (\_ -> p)
 
 -- Permutations Testing
 
--- Preconditions: 
--- List have the same length
-
--- Postconditions: 
--- List has the same length
--- Elements don't stand on the same
-
-genIntList2 :: IO [Int]
-genIntList2 = do 
+genUniqueIntList :: IO [Int]
+genUniqueIntList = do 
   k <- getRandomInt 10
   n <- getRandomInt 10
-  getIntL2 k n
+  genUniqueIntL k n
 
-getIntL2 :: Int -> Int -> IO [Int]
-getIntL2 _ 0 = return []
-getIntL2 k n = do 
-   x <-  getRandomInt k
+genUniqueIntL :: Int -> Int -> IO [Int]
+genUniqueIntL _ 0 = return []
+genUniqueIntL k n = do 
+   x <- getRandomInt k
    y <- randomFlip x
-   xs <- getIntL2 k (n-1)
+   xs <- genUniqueIntL k (n-1)
    if elem y xs then
     do
    return (xs)
@@ -74,33 +67,28 @@ getIntL2 k n = do
     do
    return (y:xs)
 
-startPerms :: [Integer]
-startPerms = undefined
-
-initTestPermutations :: [[Integer]]
-initTestPermutations = perms [1..100]
-
-testTwoPermutations :: [[Integer]] -> IO ()
-testTwoPermutations [] = print ("ÉMPTY")
-testTwoPermutations (x:xs) = if (testPermutations x (head xs) True == True) then
-  do
-    print ("Passed on: "++show x++" & "++show (head xs))
-    if length xs >= 2 then 
-      do
-        testTwoPermutations xs
-      else 
-        print ("Done")
+testIsPermutation :: IO ()
+testIsPermutation = do
+  x <- genUniqueIntList
+  if length (perms x) >= 2 then do 
+    testTwoPermutations 0 100 (perms x)
   else 
+    testIsPermutation
+
+testTwoPermutations :: Eq a => Show a => Integer -> Integer -> [[a]] -> IO ()
+testTwoPermutations n m [] = print ("Nope")
+testTwoPermutations n m (x:xs) = if (testPermutations x (head xs) True == True) then
     do
-    print ("Failed on: "++show x++" & "++show (head xs))
-    if length xs >= 2 then 
+      print ("Passed on: "++show x++" & "++show (head xs))
+      if length xs >= 2 && (n+1) < m then 
+        do
+          testTwoPermutations (n+1) m xs
+        else 
+          print ( show (n+1) ++ " test passed")
+    else 
       do
-        testTwoPermutations xs
-      else 
-        print ("WTF2")
+      error ("Failed on: "++show x++" & "++show (head xs))
 
 testPermutations :: Eq a => [a] -> [a] -> Bool -> Bool
-testPermutations x y z | isPermutation x y == z = True--print ("Pass on "+ x)
-                       | otherwise = False--print ("Failed test on "+ x)
-
-
+testPermutations x y z | isPermutation x y == z = True
+                       | otherwise = False

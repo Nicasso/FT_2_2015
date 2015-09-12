@@ -4,10 +4,10 @@ import Lab2
 import Testing
 import System.Random
 
--- Testing recognize triangles ------------------------------------
+-- Triangles Testing  ------------------------------------
 
 testTriangle :: (Integer, Integer, Integer, Shape) -> Bool
-testTriangle (x, y, z, s) = (triangleA x y z == s)
+testTriangle (x, y, z, s) = (triangle x y z == s)
 
 triangleTests :: [Test]
 triangleTests = [ Test "triangle test" testTriangle
@@ -17,18 +17,18 @@ triangleTests = [ Test "triangle test" testTriangle
 
 -- Permutations Testing -------------------------------------------
 
--- Preconditions: 
--- 2 lists of random non-repeated elements, with the same length 
+-- Test with predefined values
 
--- Postconditions: 
--- True if is a permutation, False otherwise
+testPermutationsManual :: ([Integer], [Integer], Bool) -> Bool
+testPermutationsManual (x, y, s) = (isPermutation x y == s)
 
-----
+permutationsTests :: [Test]
+permutationsTests = [ Test "permutation test" testPermutationsManual
+             [([1,2,3], [2,1,3], True), ([1,3,2,4], [2,4,1,3], True), 
+              ([1,3,4], [2,3,4], False), ([1,2], [1,2,2], False), 
+              ([8,3,6], [8,3,6], True)]]
 
--- Can we automate the test process?
---
--- Yes, we can randomly generate 2 lists of non-repeated 
--- elements with the same length and ...
+-- Automated test process
 
 genUniqueIntList :: IO [Int]
 genUniqueIntList = do 
@@ -58,7 +58,7 @@ testIsPermutation = do
     testIsPermutation
 
 testTwoPermutations :: Eq a => Show a => Integer -> Integer -> [[a]] -> IO ()
-testTwoPermutations n m [] = print ("Nope")
+testTwoPermutations n m [] = print ("No empty lists allowed")
 testTwoPermutations n m (x:xs) = if (testPermutations x (head xs) True == True) then
     do
       print ("Passed on: "++show x++" & "++show (head xs))
@@ -75,7 +75,20 @@ testPermutations :: Eq a => [a] -> [a] -> Bool -> Bool
 testPermutations x y z | isPermutation x y == z = True
                        | otherwise = False
 
--- isDerangment testing
+-- isDerangment Testing -------------------------------------------------
+
+-- Test with predefined values
+
+testDerangementsManual :: ([Integer], [Integer], Bool) -> Bool
+testDerangementsManual (x, y, s) = (isDerangement x y == s)
+
+derangementTests :: [Test]
+derangementTests = [ Test "derangement test" testDerangementsManual
+             [([1,2,3], [2,1,3], False), ([1,3,2,4], [2,4,1,3], True), 
+              ([1,3,4], [2,3,4], False), ([1,2], [1,2,2], False), 
+              ([8,3,6], [8,3,6], False)]]
+
+-- Automated test process
 
 testIsDerangement :: IO ()
 testIsDerangement = loopTestIsDerangement 0 100
@@ -96,7 +109,7 @@ buildValidDeran :: Ord a => Eq a => [a] -> [[a]]
 buildValidDeran (x:xs) = [(x:xs)]++[xs++[x]]
 
 testTwoDerangements :: Eq a => Show a => [[a]] -> IO ()
-testTwoDerangements [] = print ("Nope")
+testTwoDerangements [] = print ("No empty lists allowed")
 testTwoDerangements (x:xs) = if (testDerangement x (head xs) True == True) then
     do
       print ("Passed on: "++show x++" & "++show (head xs))
@@ -114,7 +127,7 @@ testDerangement x y z | isDerangement x y == z = True
 -- Any string 
 
 -- Postconditions: 
--- True if is a correct iban number, False otherwise
+-- True if is a correct IBAN number, False otherwise
 
 testIban :: (String, Bool) -> Bool
 testIban (s, b) = iban s == b
@@ -138,12 +151,7 @@ ibanTests = [	 Test "iban test (all valid)" testIban
 	             ]
              ]
 
--- Can we automate the test process?
---
--- Yes, for positive tests it's possible if we use a iban number generator.
--- For negative tests, we think it's way to difficult to create a function that we have 100% sure that randomly generates invalid iban numbers
-
--- AUXILIARY FUNCTIONS ----------------------------------------------
+-- Auxiliary Functions ----------------------------------------------
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -179,3 +187,6 @@ testR k n f r = if k == n then print (show n ++ " tests passed")
 
 testPost :: ([Int] -> [Int]) -> ([Int] -> Bool) -> IO ()
 testPost f p = testR 1 100 f (\_ -> p)
+
+samelength :: [a] -> [a] -> Bool
+samelength xs ys = length xs == length ys

@@ -71,7 +71,7 @@ isPermutation xs (y:ys) | length xs /= length (y:ys) = False
 
 -- The isDerangement can be automatically tested using the testIsDerangement function in the Lab2Tests.hs file
 -- Run test using: testIsDerangement
--- It will create a random list and alter it so the first element is added to the tail. So [1,2,3] becomes [2,1,3] (a valid derangement)
+-- It will create a random list and alter it so the first element is added to the tail. So [1,2,3] becomes [2,3,1] (a valid derangement)
 -- And these derangements are used to test the validity of the isDerangement function.
 
 -- Time spent:

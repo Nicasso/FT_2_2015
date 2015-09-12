@@ -133,22 +133,22 @@ testIban :: (String, Bool) -> Bool
 testIban (s, b) = iban s == b
 
 ibanTests :: [Test]
-ibanTests = [	 Test "iban test (all valid)" testIban
-	             [	("AL47 2121 1009 0000 0002 3569 8741", True), 
-	     			("AD12 0001 2030 2003 5910 0100", True),
-	     			("AT61 1904 3002 3457 3201", True),
-	     			("AZ21 NABZ 0000 0000 1370 1000 1944", True),
-	     			("BH67 BMAG 0000 1299 1234 56", True),
-	     			("BE62 5100 0754 7061", True)
-	             ], 
-	             Test "iban test (all invalid)" testIban
-	             [	("AL47 2121 1009 0000 0002 3569 8742", False), 
-	     			("AD12 0001 2030 2003 5910 0101", False),
-	     			("AT61 1904 3002 3457 3202", False),
-	     			("AZ21 NABZ 0000 0000 1370 1000 1945", False),
-	     			("BH67 BMAG 0000 1299 1234 57", False),
-	     			("BE62 5100 0754 7062", False)
-	             ]
+ibanTests = [   Test "iban test (all valid)" testIban
+               [  ("AL47 2121 1009 0000 0002 3569 8741", True), 
+             ("AD12 0001 2030 2003 5910 0100", True),
+             ("AT61 1904 3002 3457 3201", True),
+             ("AZ21 NABZ 0000 0000 1370 1000 1944", True),
+             ("BH67 BMAG 0000 1299 1234 56", True),
+             ("BE62 5100 0754 7061", True)
+               ], 
+               Test "iban test (all invalid)" testIban
+               [  ("AL47 2121 1009 0000 0002 3569 8742", False), 
+             ("AD12 0001 2030 2003 5910 0101", False),
+             ("AT61 1904 3002 3457 3202", False),
+             ("AZ21 NABZ 0000 0000 1370 1000 1945", False),
+             ("BH67 BMAG 0000 1299 1234 57", False),
+             ("BE62 5100 0754 7062", False)
+               ]
              ]
 
 -- Auxiliary Functions ----------------------------------------------
@@ -158,8 +158,8 @@ getRandomInt n = getStdRandom (randomR (0,n))
 
 randomFlip :: Int -> IO Int
 randomFlip x = do 
-	b <- getRandomInt 1
-	if b==0 then return x else return (-x)
+  b <- getRandomInt 1
+  if b==0 then return x else return (-x)
 
 genIntList :: IO [Int]
 genIntList = do 

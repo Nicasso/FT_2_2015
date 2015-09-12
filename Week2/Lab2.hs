@@ -100,7 +100,7 @@ deran n = filter (\ x -> isDerangement x [0..n-1]) (perms [0..n-1])
 -- This would make the generation of invalid IBAN numbers nearly impossible.
 -- Although we do not have a automated test process we do have written a test which will validate a list of predefined IBAN number.
 -- This test is located in the Lab2Test.hs file
--- Run test using: ibanTests
+-- Run test using: runTests ibanTests
 
 -- Time spent:
 -- IBAN: 1.5 hours

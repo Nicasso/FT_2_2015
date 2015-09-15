@@ -105,24 +105,28 @@ startGenForm s = genFormula s 1 100
 genFormula :: Int -> Int -> Int -> IO ()
 genFormula s k m = if k == m then print (show m ++ " tests passed")
                 else do 
-					n <- (getRandomInt 4)
-					p <- (getRandomInt (s-1))
-					print ("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
-					print ("TEST " ++ show k) 
-					print ("Original form: ")
-					print (formulaGenerator n p (s-1))
-					print ("CNF: ")
-					print (convertToCNF (formulaGenerator n p (s-1)))
-					genFormula s (k+1) m
+          n <- (getRandomInt 4)
+          p <- (getRandomInt (s-1))
+          print ("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+          print ("TEST " ++ show k) 
+          print ("Original form: ")
+          print (formulaGenerator n p (s-1))
+          print ("CNF: ")
+          print (convertToCNF (formulaGenerator n p (s-1)))
+          if equiv (formulaGenerator n p (s-1)) (convertToCNF (formulaGenerator n p (s-1))) then
+            print ("Success")
+          else 
+            print ("Failed")
+          genFormula s (k+1) m
 
 formulaGenerator :: Int -> Int -> Int -> Form
 formulaGenerator n p s  | (n < 0 && p >= 0 && p < s) = props !! p
-					    | (n == 0 && p >= 0 && p < s) = Equiv (formulaGenerator (n-1) (p-1) s) (formulaGenerator (n-2) (p-1) s)
-						| (n == 1 && p >= 0 && p < s) = Impl (formulaGenerator (n-1) p s) (formulaGenerator n (p+1) s)
-						| (n == 2 && p >= 0 && p < s) = Dsj [(formulaGenerator (n-1) p s), (formulaGenerator n (p-1)) s]
-						| (n == 3 && p >= 0 && p < s) = Cnj [(formulaGenerator n (p+1) s), (formulaGenerator (n-1) (p+1) s)]
-						| (n == 4 && p >= 0 && p < s) = Neg (formulaGenerator (n-1) p s) 
-						| otherwise = props !! s
+              | (n == 0 && p >= 0 && p < s) = Equiv (formulaGenerator (n-1) (p-1) s) (formulaGenerator (n-2) (p-1) s)
+            | (n == 1 && p >= 0 && p < s) = Impl (formulaGenerator (n-1) p s) (formulaGenerator n (p+1) s)
+            | (n == 2 && p >= 0 && p < s) = Dsj [(formulaGenerator (n-1) p s), (formulaGenerator n (p-1)) s]
+            | (n == 3 && p >= 0 && p < s) = Cnj [(formulaGenerator n (p+1) s), (formulaGenerator (n-1) (p+1) s)]
+            | (n == 4 && p >= 0 && p < s) = Neg (formulaGenerator (n-1) p s) 
+            | otherwise = props !! s
 
 instance Arbitrary Form where 
   arbitrary = elements [cnfExample1, cnfExample2, cnfExample3, cnfExample4, cnfExample5, cnfExample6, cnfExample7]
@@ -139,31 +143,31 @@ prop_cnf = quickCheck (\ x -> testCNF x == True)
 
 -- form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
 -- form1 = (p -> q) <=> (not(q) -> not(p))
---          1  1 1   1      0	 1	  0
---  		1  0 0	 1      1	 0	  0	
---  		0  1 1   1      0    1    1
---			0  1 0   1      1    1    1
+--          1  1 1   1      0   1    0
+--      1  0 0   1      1   0    0  
+--      0  1 1   1      0    1    1
+--      0  1 0   1      1    1    1
 --
---					tautology
+--          tautology
 
 -- form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
 -- form2 = (p -> q) <=> (not(p) -> not(q))
---          1  1 1   1     0	 1	  0
---  		1  0 0	 0     0	 1	  1	
---  		0  1 1   0     1     0    0
---			0  1 0   1     1     1    1
+--          1  1 1   1     0   1    0
+--      1  0 0   0     0   1    1  
+--      0  1 1   0     1     0    0
+--      0  1 0   1     1     1    1
 --
---					satisfiable
+--          satisfiable
 
 -- form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
 -- form3 = (p -> q) /\ (q -> r) -> (p -> r)
 --          1  1 1   1  1  1 1   1  1  1 1
---  		1  1 1   0  1  0 0   1  1  0 0
---  		1  0 0   0  0  1 1   1  1  1 1
---			1  0 0   0  0  1 0   1  1  0 0
+--      1  1 1   0  1  0 0   1  1  0 0
+--      1  0 0   0  0  1 1   1  1  1 1
+--      1  0 0   0  0  1 0   1  1  0 0
 --          0  1 1   1  1  1 1   1  0  1 1
---  		0  1 1   0  1  0 0   1  0  1 0
---  		0  1 0   1  0  1 1   1  0  1 1
---			0  1 0   1  0  1 0   1  0  1 0
+--      0  1 1   0  1  0 0   1  0  1 0
+--      0  1 0   1  0  1 1   1  0  1 1
+--      0  1 0   1  0  1 0   1  0  1 0
 --
---					tautology
+--          tautology

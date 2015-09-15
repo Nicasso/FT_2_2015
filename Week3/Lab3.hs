@@ -88,6 +88,8 @@ genFormula s k m = if k == m then print (show m ++ " tests passed")
                 else do 
 					n <- (getRandomInt 4)
 					p <- (getRandomInt (s-1))
+					print ("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
+					print ("TEST " ++ show k) 
 					print ("Original form: ")
 					print (formulaGenerator n p (s-1))
 					print ("CNF: ")

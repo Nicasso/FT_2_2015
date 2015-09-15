@@ -98,7 +98,7 @@ genFormula s k m = if k == m then print (show m ++ " tests passed")
 
 formulaGenerator :: Int -> Int -> Int -> Form
 formulaGenerator n p s  | (n < 0 && p >= 0 && p < s) = props !! p
-					    | (n == 0 && p >= 0 && p < s) = Equiv (formulaGenerator (n-1) (p-1) s) (formulaGenerator (n-2) p s)
+					    | (n == 0 && p >= 0 && p < s) = Equiv (formulaGenerator (n-1) (p-1) s) (formulaGenerator (n-2) (p-1) s)
 						| (n == 1 && p >= 0 && p < s) = Impl (formulaGenerator (n-1) p s) (formulaGenerator n (p+1) s)
 						| (n == 2 && p >= 0 && p < s) = Dsj [(formulaGenerator (n-1) p s), (formulaGenerator n (p-1)) s]
 						| (n == 3 && p >= 0 && p < s) = Cnj [(formulaGenerator n (p+1) s), (formulaGenerator (n-1) (p+1) s)]

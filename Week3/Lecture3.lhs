@@ -337,7 +337,8 @@ Example Formulas:
 > p = Prop 1
 > q = Prop 2
 > r = Prop 3 
-> 
+> s = Prop 4
+>
 > form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
 > form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
 > form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)

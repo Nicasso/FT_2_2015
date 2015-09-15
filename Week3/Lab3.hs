@@ -43,3 +43,43 @@ parseTests = [ Test "parse test" testParse
 -- 3. Converting formulas into CNF
 
 cnfExample = Impl p q
+entails f1 f2 = tautology (Impl f1 f2)
+
+-- | logical equivalence
+equiv :: Form -> Form -> Bool
+equiv f1 f2 =  tautology (Equiv f1 f2)
+
+-----------------------------------------
+
+-- Forms:
+
+-- form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
+-- form1 = (p -> q) <=> (not(q) -> not(p))
+--          1  1 1   1      0	 1	  0
+--  		1  0 0	 1      1	 0	  0	
+--  		0  1 1   1      0    1    1
+--			0  1 0   1      1    1    1
+--
+--					tautology
+
+-- form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
+-- form2 = (p -> q) <=> (not(p) -> not(q))
+--          1  1 1   1     0	 1	  0
+--  		1  0 0	 0     0	 1	  1	
+--  		0  1 1   0     1     0    0
+--			0  1 0   1     1     1    1
+--
+--					satisfiable
+
+-- form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
+-- form3 = (p -> q) /\ (q -> r) -> (p -> r)
+--          1  1 1   1  1  1 1   1  1  1 1
+--  		1  1 1   0  1  0 0   1  1  0 0
+--  		1  0 0   0  0  1 1   1  1  1 1
+--			1  0 0   0  0  1 0   1  1  0 0
+--          0  1 1   1  1  1 1   1  0  1 1
+--  		0  1 1   0  1  0 0   1  0  1 0
+--  		0  1 0   1  0  1 1   1  0  1 1
+--			0  1 0   1  0  1 0   1  0  1 0
+--
+--					tautology

@@ -72,6 +72,24 @@ distribute :: [Form] -> Form
 distribute [x] = x
 distribute (x:xs) = distributionLaw x (distribute xs)
 
+-- Robin CNF
+
+cnf2 :: Form -> Form
+cnf2 form = 
+  if updated == form
+  then form
+  else cnf2 updated
+  where
+    updated = distribution( nnf( arrowfree( form)))
+
+distribution :: Form -> Form
+distribution (Dsj [p, (Cnj [q, r])]) = (Cnj [Dsj [distribution p, distribution q], Dsj [distribution p, distribution r]]) 
+distribution (Dsj [(Cnj [q, r]), p]) = (Cnj [Dsj [distribution q, distribution p], Dsj [distribution r, distribution p]])
+distribution (Dsj [p, q]) = (Dsj [(distribution p), (distribution q)])
+distribution (Cnj [p, q]) = (Cnj [(distribution p), (distribution q)])
+distribution (Neg p) = (Neg (distribution p))
+distribution (p) = (p)
+
 -- 4. Test the correctness of CNF Convertor with random tests using QuickCheck
 
 getRandomInt :: Int -> IO Int

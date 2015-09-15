@@ -5,7 +5,7 @@ import Data.List
 import System.Random
 import Lecture3
 import Testing
-import Lab2Tests
+import Data.Char
 
 -- 1. Propositional logic
 
@@ -74,27 +74,27 @@ distribute (x:xs) = distributionLaw x (distribute xs)
 
 -- 4. Test the correctness of CNF Convertor with random tests using QuickCheck
 
+getRandomInt :: Int -> IO Int
+getRandomInt n = getStdRandom (randomR (0,n))
+
 props = [p, q, r]
 
-genFormula :: Form
-genFormula = do
-				y <- (getRandomInt 4)
-				formulaGenerator y
+-- s is length of props
 
-formulaGenerator :: Int -> Form
-formulaGenerator n = do
-						x <- (getRandomInt 2)
-						if n < 0 then props !! x 
-						else 
-							if n == 0 then Equiv (formulaGenerator n-1) (formulaGenerator n-2)
-							else
-								if n == 1 then Impl (formulaGenerator n-1) (formulaGenerator n-2)
-								else
-									if n == 2 then Dsj [(formulaGenerator n-1), (formulaGenerator n-2)]
-									else
-										if n == 3 then Cnj [(formulaGenerator n-1), (formulaGenerator n-2)]
-											else
-												if n == 4 then Neg (formulaGenerator n-1) else props !! x
+genFormula :: Int -> IO ()
+genFormula s = do 
+				n <- (getRandomInt 4)
+				p <- (getRandomInt (s-1))
+				print (formulaGenerator n p (s-1))
+
+formulaGenerator :: Int -> Int -> Int -> Form
+formulaGenerator n p s  | (n < 0 && p >= 0 && p < s) = props !! p
+					    | (n == 0 && p >= 0 && p < s) = Equiv (formulaGenerator (n-1) (p-1) s) (formulaGenerator (n-2) p s)
+						| (n == 1 && p >= 0 && p < s) = Impl (formulaGenerator (n-1) p s) (formulaGenerator (n-1) (p+1) s)
+						| (n == 2 && p >= 0 && p < s) = Dsj [(formulaGenerator (n-1) p s), (formulaGenerator n (p-1)) s]
+						| (n == 3 && p >= 0 && p < s) = Cnj [(formulaGenerator (n-1) (p+1) s), (formulaGenerator (n-2) (p+1) s)]
+						| (n == 4 && p >= 0 && p < s) = Neg (formulaGenerator (n-1) p s) 
+						| otherwise = props !! s
 
 -----------------------------------------
 

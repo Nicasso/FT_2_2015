@@ -6,6 +6,7 @@ import System.Random
 import Lecture3
 import Testing
 import Data.Char
+import Test.QuickCheck
 
 -- 1. Propositional logic
 
@@ -63,14 +64,14 @@ cnf (Neg x) = Neg x
 cnf (Cnj x) = Cnj (map cnf x)
 cnf (Dsj x) = distribute (map cnf x)
 
+distribute :: [Form] -> Form
+distribute [x] = x
+distribute (x:xs) = distributionLaw x (distribute xs)
+
 distributionLaw :: Form -> Form -> Form
 distributionLaw (Cnj x) y = Cnj (map (\z -> distributionLaw z y) x)    
 distributionLaw x (Cnj y) = Cnj (map (\z -> distributionLaw x z) y)
 distributionLaw x y = Dsj [x, y]
-
-distribute :: [Form] -> Form
-distribute [x] = x
-distribute (x:xs) = distributionLaw x (distribute xs)
 
 -- Robin CNF
 
@@ -90,7 +91,7 @@ distribution (Cnj [p, q]) = (Cnj [(distribution p), (distribution q)])
 distribution (Neg p) = (Neg (distribution p))
 distribution (p) = (p)
 
--- 4. Test the correctness of CNF Convertor with random tests using QuickCheck
+-- 4. Test the correctness of CNF Converter with random tests using QuickCheck
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -122,6 +123,15 @@ formulaGenerator n p s  | (n < 0 && p >= 0 && p < s) = props !! p
 						| (n == 3 && p >= 0 && p < s) = Cnj [(formulaGenerator n (p+1) s), (formulaGenerator (n-1) (p+1) s)]
 						| (n == 4 && p >= 0 && p < s) = Neg (formulaGenerator (n-1) p s) 
 						| otherwise = props !! s
+
+instance Arbitrary Form where 
+  arbitrary = elements [cnfExample1, cnfExample2, cnfExample3, cnfExample4, cnfExample5, cnfExample6, cnfExample7]
+
+testCNF :: Form -> Bool
+testCNF x = equiv x (cnf2 x)
+
+prop_cnf :: IO ()
+prop_cnf = quickCheck (\ x -> testCNF x == True)
 
 -----------------------------------------
 

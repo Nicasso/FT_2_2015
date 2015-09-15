@@ -5,7 +5,7 @@ import Data.List
 import System.Random
 import Lecture3
 import Testing
-
+import Lab2Tests
 
 -- 1. Propositional logic
 
@@ -44,6 +44,30 @@ parseTests = [ Test "parse test" testParse
 
 cnfExample = Impl p q
 
+-- 4. Test the correctness of CNF Convertor with random tests using QuickCheck
+
+props = [p, q, r]
+
+genFormula :: Form
+genFormula = do
+				y <- (getRandomInt 4)
+				formulaGenerator y
+
+formulaGenerator :: Int -> Form
+formulaGenerator n = do
+						x <- (getRandomInt 2)
+						if n < 0 then props !! x 
+						else 
+							if n == 0 then Equiv (formulaGenerator n-1) (formulaGenerator n-2)
+							else
+								if n == 1 then Impl (formulaGenerator n-1) (formulaGenerator n-2)
+								else
+									if n == 2 then Dsj [(formulaGenerator n-1), (formulaGenerator n-2)]
+									else
+										if n == 3 then Cnj [(formulaGenerator n-1), (formulaGenerator n-2)]
+											else
+												if n == 4 then Neg (formulaGenerator n-1) else props !! x
+
 -----------------------------------------
 
 -- Forms:
@@ -79,4 +103,3 @@ cnfExample = Impl p q
 --
 --					tautology
 
--- 

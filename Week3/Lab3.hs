@@ -5,7 +5,7 @@ import Data.List
 import System.Random
 import Lecture3
 import Testing
-
+import Lab2Tests
 
 -- 1. Propositional logic
 
@@ -71,3 +71,62 @@ distributionLaw x y = Dsj [x, y]
 distribute :: [Form] -> Form
 distribute [x] = x
 distribute (x:xs) = distributionLaw x (distribute xs)
+
+-- 4. Test the correctness of CNF Convertor with random tests using QuickCheck
+
+props = [p, q, r]
+
+genFormula :: Form
+genFormula = do
+				y <- (getRandomInt 4)
+				formulaGenerator y
+
+formulaGenerator :: Int -> Form
+formulaGenerator n = do
+						x <- (getRandomInt 2)
+						if n < 0 then props !! x 
+						else 
+							if n == 0 then Equiv (formulaGenerator n-1) (formulaGenerator n-2)
+							else
+								if n == 1 then Impl (formulaGenerator n-1) (formulaGenerator n-2)
+								else
+									if n == 2 then Dsj [(formulaGenerator n-1), (formulaGenerator n-2)]
+									else
+										if n == 3 then Cnj [(formulaGenerator n-1), (formulaGenerator n-2)]
+											else
+												if n == 4 then Neg (formulaGenerator n-1) else props !! x
+
+-----------------------------------------
+
+-- Forms:
+
+-- form1 = Equiv (Impl p q) (Impl (Neg q) (Neg p))
+-- form1 = (p -> q) <=> (not(q) -> not(p))
+--          1  1 1   1      0	 1	  0
+--  		1  0 0	 1      1	 0	  0	
+--  		0  1 1   1      0    1    1
+--			0  1 0   1      1    1    1
+--
+--					tautology
+
+-- form2 = Equiv (Impl p q) (Impl (Neg p) (Neg q))
+-- form2 = (p -> q) <=> (not(p) -> not(q))
+--          1  1 1   1     0	 1	  0
+--  		1  0 0	 0     0	 1	  1	
+--  		0  1 1   0     1     0    0
+--			0  1 0   1     1     1    1
+--
+--					satisfiable
+
+-- form3 = Impl (Cnj [Impl p q, Impl q r]) (Impl p r)
+-- form3 = (p -> q) /\ (q -> r) -> (p -> r)
+--          1  1 1   1  1  1 1   1  1  1 1
+--  		1  1 1   0  1  0 0   1  1  0 0
+--  		1  0 0   0  0  1 1   1  1  1 1
+--			1  0 0   0  0  1 0   1  1  0 0
+--          0  1 1   1  1  1 1   1  0  1 1
+--  		0  1 1   0  1  0 0   1  0  1 0
+--  		0  1 0   1  0  1 1   1  0  1 1
+--			0  1 0   1  0  1 0   1  0  1 0
+--
+--					tautology

@@ -137,7 +137,22 @@ testCNF x = equiv x (cnf2 x)
 prop_cnf :: IO ()
 prop_cnf = quickCheck (\ x -> testCNF x == True)
 
------------------------------------------
+-- 5. Bonus
+
+type Clauses = [Clause]
+type Clause  = [Int]
+
+cnf2cls :: Form -> Clauses
+cnf2cls x = clauses (cnf x)
+
+clauses :: Form -> Clauses
+clauses (Cnj [p, q]) = clauses p ++ clauses q
+clauses (p) = [clause p]
+
+clause :: Form -> Clause
+clause (Dsj [p, q]) = clause p ++ clause q
+clause (p) = [read(show p)]
+
 
 -- Forms:
 

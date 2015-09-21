@@ -10,6 +10,8 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
+--instance Arbitrary (Set Int) where arbitrary = list2set [1,2]
+
 randomSetInt :: IO ()
 randomSetInt =  do                  
                   l <- genIntList              
@@ -122,15 +124,23 @@ p2 = [(2,3)]
 trClos :: Ord a => Rel a -> Rel a 
 trClos x = do 
             y <- [(nub (x ++ (x @@ x)))]
-            if x /=  y
+            if x /= y
             then trClos y 
             else sort x
 
 
 -- 7. --------------------------------------------------
 
+-- Is there a difference between the symmetric closure of the transitive closure of a relation R and the transitive closure of the symmetric closure of R?
 
+-- Yes there is a difference when you change the order of applying the symmetric and transitive closure.
+-- Here is the example:
 
+-- Original set: [(1,2),(2,3),(3,4)]
+-- Transitive closure: [(1,2),(1,3),(1,4),(2,3),(2,4),(3,4)]
+-- Symmetric closure: [(1,2),(2,1),(2,3),(3,2),(3,4),(4,3)]
+-- Transitive closure after Symmetric closure: [(1,1),(1,2),(1,3),(1,4),(2,1),(2,2),(2,3),(2,4),(3,1),(3,2),(3,3),(3,4),(4,1),(4,2),(4,3),(4,4)]
+-- Symmetric closure after Transitive closure: [(1,2),(1,3),(1,4),(2,1),(2,3),(2,4),(3,1),(3,2),(3,4),(4,1),(4,2),(4,3)]
 
 -- 8. --------------------------------------------------
 

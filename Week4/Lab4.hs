@@ -7,10 +7,13 @@ import SetOrd
 
 -- 1. --------------------------------------------------
 
+-- @TODO: Read and make questions
 
 -- 2. --------------------------------------------------
 
 --instance Arbitrary (Set Int) where arbitrary = list2set [1,2]
+
+-- @TODO: Create a quickcheck test 
 
 randomSetInt :: IO ()
 randomSetInt =  do                  
@@ -69,13 +72,9 @@ prop_duplicates (x:xs) = if elem x xs then False
 
 -- 3. --------------------------------------------------
 
+-- @TODO: Create a test 
+
 -- Time spent: 1 hour
-
-a = list2set [(1,2),(2,3),(3,3)]
-b = list2set [(2,1),(3,1),(1,1)]
-
-c = list2set [1,2,3]
-d = list2set [2,3,4]
 
 createUnion :: (Ord a) => Set a -> Set a -> Set a 
 createUnion (Set [])     set2  =  set2
@@ -93,7 +92,7 @@ createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDif
 
 -- 4. --------------------------------------------------
 
-
+-- @TODO: Read and make questions
 
 -- 5. --------------------------------------------------
 
@@ -103,7 +102,7 @@ type Rel a = [(a,a)]
 
 symClos :: Ord a => Rel a -> Rel a
 symClos [] = []
-symClos (x:xs) = sort (nub (inversePair x ++ symClos xs))
+symClos (x:xs) = sort (inversePair x ++ symClos xs)
 
 inversePair :: (Eq a) => (a,a) -> Rel a
 inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b)]
@@ -116,10 +115,6 @@ infixr 5 @@
 
 (@@) :: Eq a => Rel a -> Rel a -> Rel a
 r @@ s = nub [ (x,z) | (x,y) <- r, (w,z) <- s, y == w ]
-
-complete = [(1,2),(2,3),(3,4)]
-p1 = [(1,2)]
-p2 = [(2,3)]
 
 trClos :: Ord a => Rel a -> Rel a 
 trClos x = do 

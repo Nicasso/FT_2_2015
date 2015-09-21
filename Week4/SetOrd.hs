@@ -52,7 +52,7 @@ deleteList x ys@(y:ys') = case compare x y of
 list2set :: Ord a => [a] -> Set a
 list2set [] = Set []
 list2set (x:xs) = insertSet x (list2set xs)
--- list2set xs = Set (foldr insertList [] xs)
+list2set xs = Set (foldr insertList [] xs)
 
 powerSet :: Ord a => Set a -> Set (Set a)
 powerSet (Set xs) = 

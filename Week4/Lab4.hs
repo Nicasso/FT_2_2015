@@ -101,7 +101,7 @@ type Rel a = [(a,a)]
 
 symClos :: Ord a => Rel a -> Rel a
 symClos [] = []
-symClos (x:xs) = sort (inversePair x ++ symClos xs)
+symClos (x:xs) = sort (nub (inversePair x ++ symClos xs))
 
 inversePair :: (Eq a) => (a,a) -> Rel a
 inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b)]

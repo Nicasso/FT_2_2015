@@ -19,8 +19,6 @@ genRandomSetInt :: [Int] -> Set Int -> Set Int
 genRandomSetInt [] s = s
 genRandomSetInt (x:xs) s = genRandomSetInt xs (insertSet x s)
 
-
-
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
 
@@ -49,6 +47,23 @@ generateRandomData = do
   x <- genIntList
   list2set x
 -}
+
+-- Trying to write test functions. NOT YET DONE!
+
+testSet :: Form -> Bool
+testSet x = equiv x (convertToCNF x)
+
+prop_testSet :: IO ()
+prop_testSet = quickCheck (\ x -> testSet x == True)
+
+prop_ordered :: (Ord a) => [a] -> Bool
+prop_ordered xs = xs == sort xs
+
+prop_duplicates :: (Ord a) => [a] -> Bool
+prop_duplicates [] = True
+prop_duplicates [x] = True
+prop_duplicates (x:xs) = if elem x xs then False
+                             else prop_duplicates xs
 
 -- 3. --------------------------------------------------
 

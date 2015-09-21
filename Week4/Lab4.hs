@@ -52,6 +52,8 @@ generateRandomData = do
 
 -- 3. --------------------------------------------------
 
+-- Time spent: 1 hour
+
 a = list2set [(1,2),(2,3),(3,3)]
 b = list2set [(2,1),(3,1),(1,1)]
 
@@ -78,7 +80,7 @@ createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDif
 
 -- 5. --------------------------------------------------
 
--- Time spent: 1 Hour
+-- Time spent: 1 hour
 
 type Rel a = [(a,a)]
 
@@ -91,7 +93,18 @@ inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b)]
 
 -- 6. --------------------------------------------------
 
+infixr 5 @@
 
+(@@) :: Eq a => Rel a -> Rel a -> Rel a
+r @@ s = nub [ (x,z) | (x,y) <- r, (w,z) <- s, y == w ]
+
+complete = [(1,2),(2,3),(3,4)]
+p1 = [(1,2)]
+p2 = [(2,3)]
+
+trClos :: Ord a => Rel a -> Rel a 
+trClos [] = []
+trClos (x:xs) = x:xs
 
 
 -- 7. --------------------------------------------------

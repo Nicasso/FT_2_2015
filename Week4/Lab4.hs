@@ -1,4 +1,3 @@
-
 module Lab4 where
 
 import Data.List
@@ -6,11 +5,11 @@ import System.Random
 import Test.QuickCheck 
 import SetOrd
 
--- 1. Questions of Chapter 4 of The Haskell Road
+-- 1. --------------------------------------------------
 
 
 
--- 2. Random data generator for Set Int
+-- 2. --------------------------------------------------
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -41,7 +40,7 @@ generateRandomData = do
   list2set x
 -}
 
--- 3 Implement operations for set intersection, set union, and set difference
+-- 3. --------------------------------------------------
 
 a = list2set [(1,2),(2,3),(3,3)]
 b = list2set [(2,1),(3,1),(1,1)]
@@ -63,13 +62,41 @@ createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
 
--- 4. Questions of Chapter 5 of The Haskell Road
+-- 4. --------------------------------------------------
 
 
 
--- 5. Symmetric closure
+-- 5. --------------------------------------------------
+
+-- Time spent: 1 Hour
 
 type Rel a = [(a,a)]
 
 symClos :: Ord a => Rel a -> Rel a
-symClos 
+symClos [] = []
+symClos (x:xs) = inversePair x ++ symClos xs
+
+inversePair :: (Eq a) => (a,a) -> Rel a
+inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b)]
+
+-- 6. --------------------------------------------------
+
+
+
+
+-- 7. --------------------------------------------------
+
+
+
+
+-- 8. --------------------------------------------------
+
+
+
+
+-- 9. --------------------------------------------------
+
+
+
+
+-- 10. --------------------------------------------------

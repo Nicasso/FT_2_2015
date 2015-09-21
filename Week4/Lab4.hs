@@ -93,6 +93,8 @@ inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b)]
 
 -- 6. --------------------------------------------------
 
+-- Time spent: 1 hour
+
 infixr 5 @@
 
 (@@) :: Eq a => Rel a -> Rel a -> Rel a

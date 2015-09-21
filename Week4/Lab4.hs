@@ -103,8 +103,11 @@ p1 = [(1,2)]
 p2 = [(2,3)]
 
 trClos :: Ord a => Rel a -> Rel a 
-trClos [] = []
-trClos (x:xs) = x:xs
+trClos x = do 
+            y <- [(nub (x ++ (x @@ x)))]
+            if x /=  y
+            then trClos y 
+            else sort x
 
 
 -- 7. --------------------------------------------------

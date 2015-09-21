@@ -8,11 +8,23 @@ import SetOrd
 -- 1. --------------------------------------------------
 
 
-
 -- 2. --------------------------------------------------
+
+randomSetInt :: IO ()
+randomSetInt =  do
+                  l <- getRandomInt 10
+                  print (genRandomSetInt l emptySet)                            
+
+genRandomSetInt :: Int -> Set Int -> Set Int
+genRandomSetInt n s = if n == 0 then s
+                      else genRandomSetInt (n-1) (insertSet n s)
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
+
+
+
+
 
 genIntList :: IO [Int]
 genIntList = do 

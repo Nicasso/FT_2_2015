@@ -50,11 +50,11 @@ generateRandomData = do
 
 -- Trying to write test functions. NOT YET DONE!
 
-testSet :: Form -> Bool
-testSet x = equiv x (convertToCNF x)
+--testSet :: Form -> Bool
+--testSet x = equiv x (convertToCNF x)
 
-prop_testSet :: IO ()
-prop_testSet = quickCheck (\ x -> testSet x == True)
+--prop_testSet :: IO ()
+--prop_testSet = quickCheck (\ x -> testSet x == True)
 
 prop_ordered :: (Ord a) => [a] -> Bool
 prop_ordered xs = xs == sort xs

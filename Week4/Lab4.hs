@@ -11,14 +11,14 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
---instance Arbitrary (Set Int) where arbitrary = list2set [1,2]
+instance Arbitrary (Set a) where arbitrary = emptySet
 
--- @TODO: Create a quickcheck test 
+-- @TODO: Create a quickcheck test
 
 randomSetInt :: IO ()
 randomSetInt =  do                  
                   l <- genIntList              
-                  print (genRandomSetInt l emptySet)                            
+                  print (genRandomSetInt l emptySet)
 
 genRandomSetInt :: [Int] -> Set Int -> Set Int
 genRandomSetInt [] s = s

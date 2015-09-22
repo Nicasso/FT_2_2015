@@ -3,6 +3,7 @@
 module Lab4 where
 
 import Data.List
+import Data.Tuple
 import System.Random
 import Test.QuickCheck 
 import SetOrd
@@ -109,10 +110,7 @@ type Rel a = [(a,a)]
 
 symClos :: Ord a => Rel a -> Rel a
 symClos [] = []
-symClos (x:xs) = sort (nub (inversePair x ++ symClos xs))
-
-inversePair :: (Eq a) => (a,a) -> Rel a
-inversePair (a,b) = if (a /= b) then [(a,b),(b,a)] else [(a,b )]
+symClos (x:xs) = sort (nub ([x] ++ (if (fst x /= snd x) then [swap x] else []) ++ symClos xs))
 
 -- 6. --------------------------------------------------
 

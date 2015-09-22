@@ -141,6 +141,14 @@ trClos x = do
 
 -- Time spent: 1 hour
 
+-- verboseCheckWith stdArgs { maxSize = 10 } prop_symmetricClosure
+
+testFive :: IO ()
+testFive = verboseCheckWith stdArgs { maxSize = 10 } prop_symmetricClosure
+
+prop_symmetricClosure :: Rel Int -> Bool
+prop_symmetricClosure xs = testSymClos xs
+
 testSymClos :: Ord a => Rel a -> Bool
 testSymClos x = (testSymmetry (nub x) (symClos x)) &&
                 (testLength (nub x) (symClos x) 0)

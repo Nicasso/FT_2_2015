@@ -25,19 +25,13 @@ instance Arbitrary (Set Int) where arbitrary = do
                                                   numbers <- listOf1 ( elements [1..9] )
                                                   return (list2set numbers)
 
+-- Properties --
+
 -- Random Set Int Generator --
 randomSetInt :: IO ()
 randomSetInt =  do
                   l <- genIntList
                   print (list2set l)
-
--- Properties --
-
-prop_ordered :: (Ord Int) => Set Int -> Bool
-prop_ordered xs = xs !!! 0 >= xs !!! 1 && prop_o
-
-prop_notDuplicates :: (Ord Int) => Set Int -> Bool
-prop_notDuplicates s = nub s == s
 
 -- AUX FUNCTIONS --
 
@@ -105,12 +99,6 @@ createDifference :: (Ord a) => Set a -> Set a -> Set a
 createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
-
---prop_orderedAfterUnion :: (Ord a) => [Set a] -> Bool
---prop_orderedAfterUnion s = prop_ordered (createUnion (s !! 0) (s !! 1))
-
---prop_notDuplicatesAfterUnion :: (Ord a) => [Set a] -> Bool
---prop_notDuplicatesAfterUnion s = prop_notDuplicates (createUnion (s !! 0) (s !! 1))
 
 -- 4. --------------------------------------------------
 

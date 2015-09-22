@@ -22,10 +22,25 @@ import SetOrd
 -- @TODO: Create a quickcheck test
 
 instance Arbitrary (Set Int) where arbitrary = do
-                                                  numbers <- listOf1 ( elements [1..9] )
+                                                  numbers <- listOf1 (elements [1..9])
                                                   return (list2set numbers)
 
 -- Properties --
+prop_ordered :: (Set Int) -> Bool
+prop_ordered s = set2list s == sort (set2list s)  
+
+prop_NotDuplicates :: (Ord a) => (Set Int) -> Bool
+prop_NotDuplicates s = aux1 (set2list s)
+
+aux1 :: (Ord a) => [a] -> Bool
+aux1 [] = True
+aux1 [x] = True
+aux1 (x:xs) = if elem x xs then False
+              else aux1 xs
+
+set2list :: Ord a => Set a -> [a]
+set2list s | isEmpty s = []
+           | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
 
 -- Random Set Int Generator --
 randomSetInt :: IO ()

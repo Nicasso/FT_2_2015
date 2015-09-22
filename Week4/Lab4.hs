@@ -58,14 +58,19 @@ generateRandomData = do
 --prop_testSet :: IO ()
 --prop_testSet = quickCheck (\ x -> testSet x == True)
 
-prop_ordered :: (Ord a) => [a] -> Bool
-prop_ordered xs = xs == sort xs
+prop_ordered :: (Ord a) => Set a -> Bool
+prop_ordered xs = [xs] == sort [xs]
 
-prop_duplicates :: (Ord a) => [a] -> Bool
-prop_duplicates [] = True
-prop_duplicates [x] = True
-prop_duplicates (x:xs) = if elem x xs then False
-                             else prop_duplicates xs
+prop_dup :: (Ord a) => [a] -> Bool
+prop_dup [] = True
+prop_dup [x] = True
+prop_dup (x:xs) = if elem x xs then False
+                             else prop_dup xs
+
+prop_notDuplicates :: (Ord a) => Set a -> Bool
+prop_notDuplicates s | isEmpty s = True
+                     | elem (head [s]) (tail [s]) = False
+                     | otherwise = prop_notDuplicates (Set (tail [s]))
 
 -- 3. --------------------------------------------------
 
@@ -79,8 +84,8 @@ lst2 = [1,4,5]
 set1 = list2set lst1
 set2 = list2set lst2
 
-instance Arbitrary (Set Int) where
-    arbitrary = elements [list2set lst1, list2set lst2]
+instance Arbitrary [Set Int] where
+    arbitrary = elements [[set1, set2]]
 
 createUnion :: (Ord a) => Set a -> Set a -> Set a 
 createUnion (Set [])     set2  =  set2
@@ -96,7 +101,11 @@ createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
 
-prop_a (x:xs) = prop_duplicates (createUnion x xs)
+prop_orderedAfterUnion :: (Ord a) => [Set a] -> Bool
+prop_orderedAfterUnion s = prop_ordered (createUnion (s !! 0) (s !! 1))
+
+prop_notDuplicatesAfterUnion :: (Ord a) => [Set a] -> Bool
+prop_notDuplicatesAfterUnion s = prop_notDuplicates (createUnion (s !! 0) (s !! 1))
 
 -- 4. --------------------------------------------------
 

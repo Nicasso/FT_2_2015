@@ -38,7 +38,7 @@ instance Arbitrary (Set Int) where
 prop_ordered :: (Set Int) -> Bool
 prop_ordered s = set2list s == sort (set2list s)  
 
-prop_NotDuplicates :: (Ord a) => (Set Int) -> Bool
+prop_NotDuplicates :: (Set Int) -> Bool
 prop_NotDuplicates s = aux1 (set2list s)
 
 
@@ -101,6 +101,9 @@ createDifference :: (Ord a) => Set a -> Set a -> Set a
 createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
+
+--prop_equalRemoved_diff :: (Set Int) -> (Set Int) -> Bool
+--prop_equalRemoved_diff s1 s2 = 
 
 -- 4. --------------------------------------------------
 

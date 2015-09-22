@@ -11,8 +11,6 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
-instance Arbitrary (Set a) where arbitrary = emptySet
-
 -- @TODO: Create a quickcheck test
 
 randomSetInt :: IO ()

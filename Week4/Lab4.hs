@@ -1,3 +1,5 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 module Lab4 where
 
 import Data.List
@@ -16,11 +18,7 @@ import SetOrd
 randomSetInt :: IO ()
 randomSetInt =  do                  
                   l <- genIntList              
-                  print (genRandomSetInt l emptySet)
-
-genRandomSetInt :: [Int] -> Set Int -> Set Int
-genRandomSetInt [] s = s
-genRandomSetInt (x:xs) s = genRandomSetInt xs (insertSet x s)
+                  print (list2set l)
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -74,6 +72,15 @@ prop_duplicates (x:xs) = if elem x xs then False
 
 -- Time spent: 1 hour
 
+lst1 = [1,2,3] 
+lst2 = [1,4,5]
+
+set1 = list2set lst1
+set2 = list2set lst2
+
+instance Arbitrary (Set Int) where
+    arbitrary = elements [list2set lst1, list2set lst2]
+
 createUnion :: (Ord a) => Set a -> Set a -> Set a 
 createUnion (Set [])     set2  =  set2
 createUnion (Set (x:xs)) set2  = insertSet x (createUnion (Set xs) set2)
@@ -87,6 +94,8 @@ createDifference :: (Ord a) => Set a -> Set a -> Set a
 createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
+
+prop_a (x:xs) = prop_duplicates (createUnion x xs)
 
 -- 4. --------------------------------------------------
 

@@ -139,6 +139,28 @@ trClos x = do
 
 -- 7. --------------------------------------------------
 
+-- Time spent: 1 hour
+
+testSymClos :: Ord a => Rel a -> Bool
+testSymClos x = (testSymmetry (nub x) (symClos x)) &&
+                (testLength (nub x) (symClos x) 0)
+
+testSymmetry :: Ord a => Eq a => Rel a -> Rel a -> Bool
+testSymmetry _ [] = True
+testSymmetry (x)(y:ys) = if ((elem y x) || (elem (swap y) x))
+                         then testSymmetry (x)(ys)
+                         else False
+                
+testLength :: Ord a => Eq a => Rel a -> Rel a -> Int -> Bool
+testLength [] y z = (z == length y)
+testLength (x:xs) y z = if (elem (swap x) xs) 
+                          then do
+                            testLength xs y z
+                          else if (fst x == snd x)
+                                  then do
+                                    testLength xs y (z + 1)
+                                  else do
+                                    testLength xs y (z + 2)
 
 
 -- 8. --------------------------------------------------

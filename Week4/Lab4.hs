@@ -21,9 +21,13 @@ import SetOrd
 
 -- @TODO: Create a quickcheck test
 
+instance Arbitrary (Set Int) where arbitrary = do
+                                                  numbers <- listOf1 ( elements [1..9] )
+                                                  return (list2set numbers)
+
 randomSetInt :: IO ()
-randomSetInt =  do                  
-                  l <- genIntList              
+randomSetInt =  do
+                  l <- genIntList
                   print (list2set l)
 
 getRandomInt :: Int -> IO Int
@@ -83,9 +87,6 @@ lst2 = [1,4,5]
 
 set1 = list2set lst1
 set2 = list2set lst2
-
---instance Arbitrary [Set Int] where
---    arbitrary = elements [[set1, set2], [set2, set1]]
 
 createUnion :: (Ord a) => Set a -> Set a -> Set a 
 createUnion (Set [])     set2  =  set2

@@ -25,10 +25,21 @@ instance Arbitrary (Set Int) where arbitrary = do
                                                   numbers <- listOf1 ( elements [1..9] )
                                                   return (list2set numbers)
 
+-- Random Set Int Generator --
 randomSetInt :: IO ()
 randomSetInt =  do
                   l <- genIntList
                   print (list2set l)
+
+-- Properties --
+
+prop_ordered :: (Ord Int) => Set Int -> Bool
+prop_ordered xs = xs !!! 0 >= xs !!! 1 && prop_o
+
+prop_notDuplicates :: (Ord Int) => Set Int -> Bool
+prop_notDuplicates s = nub s == s
+
+-- AUX FUNCTIONS --
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -51,6 +62,8 @@ getIntL k n = do
    y <- randomFlip x
    xs <- getIntL k (n-1)
    return (y:xs)
+--------------------
+
 
 {-
 generateRandomData :: Num a => Ord a => Set a
@@ -66,15 +79,6 @@ generateRandomData = do
 
 --prop_testSet :: IO ()
 --prop_testSet = quickCheck (\ x -> testSet x == True)
-
---prop_ordered :: (Ord Int) => Set Int -> Bool
---prop_ordered xs = xs !!! 0 >= xs !!! 1 && prop_o
-
---prop_o ::
-prop_o x = True 
-
---prop_notDuplicates :: (Ord Int) => Set Int -> Bool
---prop_notDuplicates s = nub s == s
 
 -- 3. --------------------------------------------------
 

@@ -19,18 +19,30 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
--- @TODO: Create a quickcheck test
+-- random data generator for the datatype Set Int --
 
-instance Arbitrary (Set Int) where arbitrary = do
-                                                  numbers <- listOf1 (elements [1..9])
-                                                  return (list2set numbers)
+randomSetInt :: IO ()
+randomSetInt =  do
+                  l <- genIntList
+                  print (list2set l)
+
+-- QuickCheck to random test (instance)--
+
+instance Arbitrary (Set Int) where 
+  arbitrary = do
+                numbers <- listOf1 (elements [1..9])
+                return (list2set numbers)
 
 -- Properties --
+
 prop_ordered :: (Set Int) -> Bool
 prop_ordered s = set2list s == sort (set2list s)  
 
 prop_NotDuplicates :: (Ord a) => (Set Int) -> Bool
 prop_NotDuplicates s = aux1 (set2list s)
+
+
+-- aux functions --
 
 aux1 :: (Ord a) => [a] -> Bool
 aux1 [] = True
@@ -41,14 +53,6 @@ aux1 (x:xs) = if elem x xs then False
 set2list :: Ord a => Set a -> [a]
 set2list s | isEmpty s = []
            | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
-
--- Random Set Int Generator --
-randomSetInt :: IO ()
-randomSetInt =  do
-                  l <- genIntList
-                  print (list2set l)
-
--- AUX FUNCTIONS --
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -71,23 +75,6 @@ getIntL k n = do
    y <- randomFlip x
    xs <- getIntL k (n-1)
    return (y:xs)
---------------------
-
-
-{-
-generateRandomData :: Num a => Ord a => Set a
-generateRandomData = do
-  x <- genIntList
-  list2set x
--}
-
--- Trying to write test functions. NOT YET DONE!
-
---testSet :: Form -> Bool
---testSet x = equiv x (convertToCNF x)
-
---prop_testSet :: IO ()
---prop_testSet = quickCheck (\ x -> testSet x == True)
 
 -- 3. --------------------------------------------------
 

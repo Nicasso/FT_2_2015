@@ -137,7 +137,7 @@ trClos x = do
 
 -- 7. --------------------------------------------------
 
--- Time spent: 4 hour
+-- Time spent: 1 hour
 
 -- verboseCheckWith stdArgs { maxSize = 10 } prop_symmetricClosure
 
@@ -168,24 +168,6 @@ testLength (x:xs) y z = if (elem (swap x) xs)
                                   else do
                                     testLength xs y (z + 2)
 
-testTrClos :: Ord a => Rel a -> Bool
-testTrClos x = (testIncludes (nub x) (trClos x)) && 
-               (testTransitivity (trClos x))
-
-testIncludes :: Ord a => Eq a => Rel a -> Rel a -> Bool
-testIncludes [] _ = True
-testIncludes (x:xs)(y) = if (elem x y)
-                         then testIncludes (xs)(y)
-                         else False
-
-testTransitivity :: Ord a => Eq a => Rel a -> Bool
-testTransitivity x = isIncludedIn (nub [ (a,d) | (a,b) <- x, (c,d) <- x, b == c, a /= d]) x
- 
-isIncludedIn :: Ord a => Eq a => Rel a -> Rel a -> Bool
-isIncludedIn [] _ = True
-isIncludedIn (x:xs)(y) = if (elem x y)
-                         then isIncludedIn (xs)(y)
-                         else False
 
 -- 8. --------------------------------------------------
 

@@ -88,9 +88,6 @@ lst2 = [1,4,5]
 set1 = list2set lst1
 set2 = list2set lst2
 
---instance Arbitrary [Set Int] where
---    arbitrary = elements [[set1, set2]]
-
 createUnion :: (Ord a) => Set a -> Set a -> Set a 
 createUnion (Set [])     set2  =  set2
 createUnion (Set (x:xs)) set2  = insertSet x (createUnion (Set xs) set2)
@@ -105,11 +102,25 @@ createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
 
-prop_orderedAfterUnion :: (Ord a) => [Set a] -> Bool
-prop_orderedAfterUnion s = prop_ordered (createUnion (s !! 0) (s !! 1))
+testUnion = verboseCheckWith stdArgs { maxSize = 10 } prop_unionSize
 
-prop_notDuplicatesAfterUnion :: (Ord a) => [Set a] -> Bool
-prop_notDuplicatesAfterUnion s = prop_notDuplicates (createUnion (s !! 0) (s !! 1))
+prop_unionSize :: (Set Int) -> (Set Int) -> Bool
+prop_unionSize xs ys = length ( set2list (createUnion xs ys) ) == length (nub ((set2list xs) ++ (set2list ys)))
+
+set2list :: Ord a => Set a -> [a]
+set2list s | isEmpty s = []
+           | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
+
+testIntersection = verboseCheckWith stdArgs { maxSize = 10 } prop_intersectionSize
+
+prop_intersectionSize :: (Set Int) -> (Set Int) -> Bool
+prop_intersectionSize xs ys = intersectionElementCheck (createIntersection xs ys) xs ys
+
+intersectionSetCheck :: (Set Int) -> (Set Int) -> (Set Int) -> Bool
+intersectionSetCheck (Set (x:xs)) (Set (y:ys)) (Set (z:zs)) = True
+
+intersectionElementCheck :: Int -> (Set Int) -> (Set Int) -> Bool
+intersectionElementCheck x ys zs = (inSet x ys || inSet x zs)
 
 -- 4. --------------------------------------------------
 

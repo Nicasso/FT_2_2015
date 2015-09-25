@@ -19,33 +19,18 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
--- random data generator for the datatype Set Int --
+-- Our random data generator for Set Int
+-- The randomSetInt function is our "from scratch" generator. 
+-- First it uses the genIntList function to generate a list of randomly generated integers.
+-- After that it will pass that list into the list2set function which will use the list to parse a Set with all the same integers.
+-- Finally it will output the Set on the screen using the print function.
+
+-- Run using: randomSetInt
 
 randomSetInt :: IO ()
 randomSetInt =  do
                   l <- genIntList
                   print (list2set l)
-
--- QuickCheck to random test (instance)--
-
-instance Arbitrary (Set Int) where 
-  arbitrary = do
-                numbers <- listOf1 (elements [1..9])
-                return (list2set numbers)
-
--- Properties --
-
-prop_ordered :: (Set Int) -> Bool
-prop_ordered s = set2list s == sort (set2list s)  
-
---prop_NotDuplicates :: (Ord a) => (Set Int) -> Bool
---prop_NotDuplicates s = aux1 (set2list s)
-
---prop_notDuplicates :: (Ord a) => Set a -> Bool
---prop_notDuplicates s | isEmpty s = True
---                     | elem (head [s]) (tail [s]) = False
---                     | otherwise = prop_notDuplicates (Set (tail [s]))
--- aux functions --
 
 aux1 :: (Ord a) => [a] -> Bool
 aux1 [] = True
@@ -75,6 +60,35 @@ getIntL k n = do
    xs <- getIntL k (n-1)
    return (y:xs)
 
+-- The QuickCheck random generator
+-- This generator also generates random Sets but this version uses QuickCheck instead of the Monad IO as our previous generator.
+-- Here we created an arbitrary instance for the (Set Int) data type.
+-- We create a list with random numbers with a length of 1 to 9. 
+-- This list is then converted to a Set using the list2set function.
+
+-- run using: sample (arbitrary :: Gen (Set Int))
+
+instance Arbitrary (Set Int) where 
+  arbitrary = do
+                numbers <- listOf1 (elements [1..9])
+                return (list2set numbers)
+
+-- Properties --
+
+-- Here we have written two properties for testing our Set generator.
+-- The first one called prop_ordered converts the Set back to a list and checks if it is ordered.
+-- The second one prop_noDuplicates checks if generated set does not contain any duplicates.
+
+-- run using: quickCheckWith stdArgs { maxSize = 20 } prop_ordered
+
+prop_ordered :: (Set Int) -> Bool
+prop_ordered s = set2list s == sort (set2list s)  
+
+-- run using: quickCheckWith stdArgs { maxSize = 20 } prop_noDuplicates
+
+prop_noDuplicates :: (Set Int) -> Bool
+prop_noDuplicates s = aux1 (set2list s)
+
 -- 3. --------------------------------------------------
 
 -- @TODO: Create a test 
@@ -101,7 +115,7 @@ createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
 
-testUnion = verboseCheckWith stdArgs { maxSize = 10 } prop_unionSize
+testUnion = verboseCheckWith stdArgs { maxSize = 20 } prop_unionSize
 
 prop_unionSize :: (Set Int) -> (Set Int) -> Bool
 prop_unionSize xs ys = length ( set2list (createUnion xs ys) ) == length (nub ((set2list xs) ++ (set2list ys)))
@@ -110,13 +124,10 @@ set2list :: Ord a => Set a -> [a]
 set2list s | isEmpty s = []
            | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
 
---testIntersection = verboseCheckWith stdArgs { maxSize = 10 } prop_intersectionSize
+--testIntersection = verboseCheckWith stdArgs { maxSize = 20 } prop_intersectionSize
 
---prop_intersectionSize :: (Set Int) -> (Set Int) -> Bool
---prop_intersectionSize xs ys = intersectionElementCheck (createIntersection xs ys) xs ys
-
-intersectionSetCheck :: (Set Int) -> (Set Int) -> (Set Int) -> Bool
-intersectionSetCheck (Set (x:xs)) (Set (y:ys)) (Set (z:zs)) = True
+prop_intersectionCheck :: (Set Int) -> (Set Int) -> Bool
+prop_intersectionCheck x y = createIntersection x y == createIntersection y x
 
 intersectionElementCheck :: Int -> (Set Int) -> (Set Int) -> Bool
 intersectionElementCheck x ys zs = (inSet x ys || inSet x zs)

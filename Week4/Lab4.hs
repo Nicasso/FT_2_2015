@@ -41,7 +41,6 @@ prop_ordered s = set2list s == sort (set2list s)
 prop_NotDuplicates :: (Set Int) -> Bool
 prop_NotDuplicates s = aux1 (set2list s)
 
-
 -- aux functions --
 
 aux1 :: (Ord a) => [a] -> Bool
@@ -49,10 +48,6 @@ aux1 [] = True
 aux1 [x] = True
 aux1 (x:xs) = if elem x xs then False
               else aux1 xs
-
-set2list :: Ord a => Set a -> [a]
-set2list s | isEmpty s = []
-           | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -102,8 +97,40 @@ createDifference (Set []) set2 = emptySet
 createDifference (Set (x:xs)) set2 | not (inSet x set2) = insertSet x (createDifference (Set xs) set2)
                                    | otherwise = createDifference (Set xs) set2
 
---prop_equalRemoved_diff :: (Set Int) -> (Set Int) -> Bool
---prop_equalRemoved_diff s1 s2 = 
+
+-- checks for each equal value between 2 sets, if it's not inside the difference -- 
+prop_equalRemoved_diff :: (Set Int) -> (Set Int) -> Bool
+prop_equalRemoved_diff s1 s2 = eachNotInside (takeEqual (set2list s1) (set2list s2)) (set2list (createDifference s1 s2))
+
+takeEqual :: [Int] -> [Int] -> [Int]
+takeEqual [] s2 = [] 
+takeEqual (x:xs) s2 | elem x s2 = [x] ++ (takeEqual xs s2)
+                    | otherwise = (takeEqual xs s2)
+
+eachNotInside :: [Int] -> [Int] -> Bool
+eachNotInside [] s2 = True 
+eachNotInside (x:xs) s2 | elem x s2 = False
+                     | otherwise = True && (eachNotInside xs s2)
+
+testUnion = verboseCheckWith stdArgs { maxSize = 10 } prop_unionSize
+
+prop_unionSize :: (Set Int) -> (Set Int) -> Bool
+prop_unionSize xs ys = length ( set2list (createUnion xs ys) ) == length (nub ((set2list xs) ++ (set2list ys)))
+
+set2list :: Ord a => Set a -> [a]
+set2list s | isEmpty s = []
+           | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
+
+--testIntersection = verboseCheckWith stdArgs { maxSize = 10 } prop_intersectionSize
+
+--prop_intersectionSize :: (Set Int) -> (Set Int) -> Bool
+--prop_intersectionSize xs ys = intersectionElementCheck (createIntersection xs ys) xs ys
+
+intersectionSetCheck :: (Set Int) -> (Set Int) -> (Set Int) -> Bool
+intersectionSetCheck (Set (x:xs)) (Set (y:ys)) (Set (z:zs)) = True
+
+intersectionElementCheck :: Int -> (Set Int) -> (Set Int) -> Bool
+intersectionElementCheck x ys zs = (inSet x ys || inSet x zs)
 
 -- 4. --------------------------------------------------
 
@@ -188,8 +215,3 @@ testLength (x:xs) y z = if (elem (swap x) xs)
 
 
 -- 10. --------------------------------------------------
-
-
-
-
--- 11. --------------------------------------------------

@@ -1,4 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverlappingInstances #-}
+{-# LANGUAGE IncoherentInstances #-}
+{-# LANGUAGE FlexibleContexts #-}
+
 
 module Lab4 where
 
@@ -6,6 +10,7 @@ import Data.List
 import Data.Tuple
 import System.Random
 import Test.QuickCheck 
+import Test.QuickCheck.Gen
 import SetOrd
 
 -- 1. --------------------------------------------------
@@ -14,16 +19,39 @@ import SetOrd
 
 -- 2. --------------------------------------------------
 
--- @TODO: Create a quickcheck test
-
-instance Arbitrary (Set Int) where arbitrary = do
-                                                  numbers <- listOf1 ( elements [1..9] )
-                                                  return (list2set numbers)
+-- random data generator for the datatype Set Int --
 
 randomSetInt :: IO ()
 randomSetInt =  do
                   l <- genIntList
                   print (list2set l)
+
+-- QuickCheck to random test (instance)--
+
+instance Arbitrary (Set Int) where 
+  arbitrary = do
+                numbers <- listOf1 (elements [1..9])
+                return (list2set numbers)
+
+-- Properties --
+
+prop_ordered :: (Set Int) -> Bool
+prop_ordered s = set2list s == sort (set2list s)  
+
+--prop_NotDuplicates :: (Ord a) => (Set Int) -> Bool
+--prop_NotDuplicates s = aux1 (set2list s)
+
+--prop_notDuplicates :: (Ord a) => Set a -> Bool
+--prop_notDuplicates s | isEmpty s = True
+--                     | elem (head [s]) (tail [s]) = False
+--                     | otherwise = prop_notDuplicates (Set (tail [s]))
+-- aux functions --
+
+aux1 :: (Ord a) => [a] -> Bool
+aux1 [] = True
+aux1 [x] = True
+aux1 (x:xs) = if elem x xs then False
+              else aux1 xs
 
 getRandomInt :: Int -> IO Int
 getRandomInt n = getStdRandom (randomR (0,n))
@@ -46,35 +74,6 @@ getIntL k n = do
    y <- randomFlip x
    xs <- getIntL k (n-1)
    return (y:xs)
-
-{-
-generateRandomData :: Num a => Ord a => Set a
-generateRandomData = do
-  x <- genIntList
-  list2set x
--}
-
--- Trying to write test functions. NOT YET DONE!
-
---testSet :: Form -> Bool
---testSet x = equiv x (convertToCNF x)
-
---prop_testSet :: IO ()
---prop_testSet = quickCheck (\ x -> testSet x == True)
-
-prop_ordered :: (Ord a) => Set a -> Bool
-prop_ordered xs = [xs] == sort [xs]
-
-prop_dup :: (Ord a) => [a] -> Bool
-prop_dup [] = True
-prop_dup [x] = True
-prop_dup (x:xs) = if elem x xs then False
-                             else prop_dup xs
-
-prop_notDuplicates :: (Ord a) => Set a -> Bool
-prop_notDuplicates s | isEmpty s = True
-                     | elem (head [s]) (tail [s]) = False
-                     | otherwise = prop_notDuplicates (Set (tail [s]))
 
 -- 3. --------------------------------------------------
 
@@ -111,10 +110,10 @@ set2list :: Ord a => Set a -> [a]
 set2list s | isEmpty s = []
            | otherwise = [(s !!! 0)] ++ set2list (deleteSet (s !!! 0) s)
 
-testIntersection = verboseCheckWith stdArgs { maxSize = 10 } prop_intersectionSize
+--testIntersection = verboseCheckWith stdArgs { maxSize = 10 } prop_intersectionSize
 
-prop_intersectionSize :: (Set Int) -> (Set Int) -> Bool
-prop_intersectionSize xs ys = intersectionElementCheck (createIntersection xs ys) xs ys
+--prop_intersectionSize :: (Set Int) -> (Set Int) -> Bool
+--prop_intersectionSize xs ys = intersectionElementCheck (createIntersection xs ys) xs ys
 
 intersectionSetCheck :: (Set Int) -> (Set Int) -> (Set Int) -> Bool
 intersectionSetCheck (Set (x:xs)) (Set (y:ys)) (Set (z:zs)) = True
@@ -154,7 +153,7 @@ trClos x = do
 
 -- 7. --------------------------------------------------
 
--- Time spent: 1 hour
+-- Time spent: 4 hour
 
 -- verboseCheckWith stdArgs { maxSize = 10 } prop_symmetricClosure
 
@@ -185,6 +184,24 @@ testLength (x:xs) y z = if (elem (swap x) xs)
                                   else do
                                     testLength xs y (z + 2)
 
+testTrClos :: Ord a => Rel a -> Bool
+testTrClos x = (testIncludes (nub x) (trClos x)) && 
+               (testTransitivity (trClos x))
+
+testIncludes :: Ord a => Eq a => Rel a -> Rel a -> Bool
+testIncludes [] _ = True
+testIncludes (x:xs)(y) = if (elem x y)
+                         then testIncludes (xs)(y)
+                         else False
+
+testTransitivity :: Ord a => Eq a => Rel a -> Bool
+testTransitivity x = isIncludedIn (nub [ (a,d) | (a,b) <- x, (c,d) <- x, b == c, a /= d]) x
+ 
+isIncludedIn :: Ord a => Eq a => Rel a -> Rel a -> Bool
+isIncludedIn [] _ = True
+isIncludedIn (x:xs)(y) = if (elem x y)
+                         then isIncludedIn (xs)(y)
+                         else False
 
 -- 8. --------------------------------------------------
 

@@ -15,7 +15,7 @@ import SetOrd
 
 -- 1. --------------------------------------------------
 
--- @TODO: Read and make questions
+-- Chapter 4 is pretty clear, therefore we have no questions.
 
 -- 2. --------------------------------------------------
 
@@ -267,10 +267,3 @@ transitiveRelation (x:xs) ys | elem x ys = transitiveRelation xs ys
 -- Symmetric closure: [(1,2),(2,1),(2,3),(3,2),(3,4),(4,3)]
 -- Transitive closure after Symmetric closure: [(1,1),(1,2),(1,3),(1,4),(2,1),(2,2),(2,3),(2,4),(3,1),(3,2),(3,3),(3,4),(4,1),(4,2),(4,3),(4,4)]
 -- Symmetric closure after Transitive closure: [(1,2),(1,3),(1,4),(2,1),(2,3),(2,4),(3,1),(3,2),(3,4),(4,1),(4,2),(4,3)]
-
--- 9. --------------------------------------------------
-
-
-
-
--- 10. --------------------------------------------------

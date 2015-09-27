@@ -107,6 +107,8 @@ set2list s | isEmpty s = []
 -- The Intersection function will create a new set with only the elements that exists in both sets.
 -- The difference function will look for all the elements that are in the first set and not in the second and create a new with with them.
 
+-- Time spent: 5 hours
+
 -- Union 
 
 -- Run using: quickCheckWith stdArgs { maxSize = 15 } prop_unionSize

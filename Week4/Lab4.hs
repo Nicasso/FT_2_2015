@@ -156,7 +156,8 @@ eachNotInside (x:xs) s2 | elem x s2 = False
 
 -- 4. --------------------------------------------------
 
--- @TODO: Read and make questions
+-- 4.1 
+--  Equivalence classes are difficult to understand. They are created by partitioning a Set with a equivalence relation. But how exactly does this work?
 
 -- 5. --------------------------------------------------
 

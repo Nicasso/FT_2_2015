@@ -6,4 +6,4 @@ This is the solution for the given Sudoku puzzle.
 
 Time spent: 2.5 hours
 
-![Solution](/Assignment1.png)
+![Solution](Assignment1.PNG)

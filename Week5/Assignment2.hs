@@ -69,6 +69,7 @@
   subGrid s (r,c) = 
     [ s (r',c') | r' <- bl r, c' <- bl c ]
 
+  {-
   freeInSeq :: [Value] -> [Value]
   freeInSeq seq = values \\ seq 
 
@@ -82,12 +83,32 @@
 
   freeInSubgrid :: Sudoku -> (Row,Column) -> [Value]
   freeInSubgrid s (r,c) = freeInSeq (subGrid s (r,c))
-
+  -}
+  
   freeAtPos :: Sudoku -> (Row,Column) -> [Value]
   freeAtPos s (r,c) = 
     (freeInRow s r) 
      `intersect` (freeInColumn s c) 
      `intersect` (freeInSubgrid s (r,c)) 
+
+  freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
+  freeAtPos' s (r,c) xs = let 
+     ys = filter (elem (r,c)) xs 
+   in 
+     foldl1 intersect (map ((values \\) . map s) ys)
+
+  {-
+  extendability:
+  
+  efficiency:
+  -} 
+
+  type Position = (Row,Column)
+  type Constrnt = [[Position]]
+
+  rowConstrnt = [[(r,c)| c <- values ] | r <- values ]
+  columnConstrnt = [[(r,c)| r <- values ] | c <- values ]
+  blockConstrnt = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks ]
 
   injective :: Eq a => [a] -> Bool
   injective xs = nub xs == xs

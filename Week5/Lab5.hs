@@ -63,7 +63,7 @@ minimalizeBlocks :: Node -> [(Row,Column)] -> Node
 minimalizeBlocks n [] = n
 minimalizeBlocks n ((r,c):rcs) | uniqueSol n' = minimalizeBlocks n' rcs
                                | otherwise    = minimalizeBlocks n  rcs
-   where n' = do until (>9) eraseN2 n (blockies c)
+   where n' = eraseNBLock n (blockies c)
 
 
 

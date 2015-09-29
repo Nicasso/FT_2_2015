@@ -169,6 +169,11 @@ subGrid :: Sudoku -> Position -> [Value]
 subGrid s (r,c) = 
   [ s (r',c') | r' <- bl r, c' <- bl c ]
 
+nrcSubGrid :: Sudoku -> (Row,Column) -> [Value]
+nrcSubGrid s (r,c) = 
+  [ s (r',c') | r' <- blNRC r, c' <- blNRC c ]
+
+
 
 
 
@@ -198,6 +203,9 @@ freeAtPos' s (r,c) xs = if (filter (elem (r,c)) xs == []) then values else
 
 
 
+
+
+
 injective :: Eq a => [a] -> Bool
 injective xs = nub xs == xs
 
@@ -213,6 +221,10 @@ subgridInjective :: Sudoku -> Position -> Bool
 subgridInjective s (r,c) = injective vs where 
    vs = filter (/= 0) (subGrid s (r,c))
 
+nrcSubgridInjective :: Sudoku -> (Row,Column) -> Bool
+nrcSubgridInjective s (r,c) = injective vs where 
+   vs = filter (/= 0) (nrcSubGrid s (r,c))
+   
 consistent :: Sudoku -> Bool
 consistent s = and $
                [ rowInjective s r |  r <- positions ]
@@ -221,6 +233,9 @@ consistent s = and $
                 ++
                [ subgridInjective s (r,c) | 
                     r <- [1,4,7], c <- [1,4,7]]
+                ++
+               [ nrcSubgridInjective s (r,c) | 
+                    r <- [2,6], c <- [2,6]]
                 
 extend :: Sudoku -> (Position,Value) -> Sudoku
 extend = update

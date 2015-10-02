@@ -40,61 +40,24 @@ tryRemovingHint s rc x | uniqueSol ( eraseN s (rc!!x) ) == True = False
 
 -- 4.
 
-blockies :: Int -> [(Row,Column)]
-blockies 1 = [ (x, y) | x <- [1..3], y <- [1..3]]
-blockies 2 = [ (x, y) | x <- [1..3], y <- [4..6]]
-blockies 3 = [ (x, y) | x <- [1..3], y <- [7..9]]
-blockies 4 = [ (x, y) | x <- [4..6], y <- [1..3]]
-blockies 5 = [ (x, y) | x <- [4..6], y <- [4..6]]
-blockies 6 = [ (x, y) | x <- [4..6], y <- [7..9]]
-blockies 7 = [ (x, y) | x <- [7..9], y <- [1..3]]
-blockies 8 = [ (x, y) | x <- [7..9], y <- [4..6]]
-blockies 9 = [ (x, y) | x <- [7..9], y <- [7..9]]
+allBlockies :: [[(Row,Column)]]
+allBlockies = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
 
-eraseSBlock :: Sudoku -> (Row,Column) -> Sudoku
-eraseSBlock s (r,c) (x,y) | (r,c) == (x,y) = 0
-                      | otherwise      = s (x,y)
-
-eraseNBLock :: Node -> [(Row,Column)] -> Node
-eraseNBLock n ((r,c):rcs) = (s, constraints s) 
-  where s = eraseSBlock (fst n) (r,c)
-
-minimalizeBlocks :: Node -> [(Row,Column)] -> Node
-minimalizeBlocks n [] = n
-minimalizeBlocks n ((r,c):rcs) | uniqueSol n' = minimalizeBlocks n' rcs
-                               | otherwise    = minimalizeBlocks n  rcs
-   where n' = eraseNBLock n (blockies c)
-
-
-
-
-
-eraseS2 :: Sudoku -> (Row,Column) -> Sudoku
-eraseS2 s (r,c) (x,y) | (r,c) == (x,y) = 0
-                      | otherwise      = s (x,y)
-
-eraseN2 :: Node -> (Row,Column) -> Node
-eraseN2 n (r,c) = (s, constraints s) 
-  where s = eraseS2 (fst n) (r,c) 
-
-minimalize2 :: Node -> [(Row,Column)] -> Node
-minimalize2 n [] = n
-minimalize2 n ((r,c):rcs) | uniqueSol n' = minimalize2 n' rcs
-                          | otherwise    = minimalize2 n  rcs
-   where n' = eraseN2 n (r,c)
-
-filledPositions2 :: Sudoku -> [(Row,Column)]
-filledPositions2 s = [ (r,c) | r <- positions,  
-                              c <- positions, s (r,c) /= 0 ]
+minimalizeBlocks :: Node -> [[(Row,Column)]] -> Int -> Node
+minimalizeBlocks n [] m = n
+minimalizeBlocks n _ 0 = n
+minimalizeBlocks n (x:xs) m | uniqueSol n' = minimalizeBlocks n' xs (m-1)
+                            | otherwise = minimalizeBlocks n xs m
+    where n' = foldl eraseN n x
 
 genProblem2 :: Node -> IO Node
-genProblem2 n = do ys <- randomize xs
-                   --return (minimalize2 n (filledPositions2 (fst (minimalizeBlocks n ys))))
-                   return (minimalizeBlocks n ys)
-   where xs = filledPositions2 (fst n)
+genProblem2 n = do 
+                  let m = minimalizeBlocks n allBlockies 9
+                  o <- randomize (filledPositions (fst m))
+                  return (minimalize m o)
 
 main2 :: IO ()
-main2 = do [r] <- rsolveNs [emptyN]
-           showNode r
-           s  <- genProblem2 r
-           showNode s
+main2 = do
+          [r] <- rsolveNs [emptyN]
+          s  <- genProblem2 r
+          showNode s

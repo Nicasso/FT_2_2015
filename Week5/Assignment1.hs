@@ -1,4 +1,4 @@
-  module Lecture5
+  module Assignment1
   
   where 
   

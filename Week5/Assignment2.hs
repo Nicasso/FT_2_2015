@@ -199,8 +199,11 @@ freeAtPos' s (r,c) xs = if (filter (elem (r,c)) xs == []) then values else
                          in foldl1 intersect (map ((values \\) . map s) ys)
 
 
+{-
 
+efficiency: (see Assignment2.png)
 
+-}
 
 
 

@@ -5,6 +5,12 @@ where
 import Data.List
 import System.Random
 
+-- @TODO Explain here
+
+-- Run using: ??????
+
+-- Time spent: ?????????????? hours
+
 type Row    = Int 
 type Column = Int 
 type Value  = Int

@@ -5,6 +5,20 @@
   import Data.List
   import System.Random
 
+  -- To be able to solve a NRC Sudoku we had to make some adjustments to the original Sudoku solver
+  -- We began by adding the NRC specific blocks using the nrcBlocks function which will be used later on.
+  -- After that we modified the showGrid function and had to add a new showRow function so we could correctly display a NRC Sudoku.
+  -- Now it is time to add the NRC block constraint, for this we made a function nrcSubGrid and bl2 which will check if 
+  -- the given (Row,Column) combination is located inside a NRC block.
+  -- freeInNrcSubgrid was also added to be able to free (Row,Column) and was added using an intersect to freeAtPos.
+  -- And by adding nrcSubgridInjective to the consistent function we are able to check if the NRC constraint is valid in the current Sudoku.
+  -- At last we had to modify the sameblock method so we where also able to check for the new NRC blocks.
+  -- With all that done the given NRC problem can be solved.
+
+  -- Run using: solveAndShow sudokuToSolve
+
+  -- Time spent: 2 hours
+
   sudokuToSolve :: Grid
   sudokuToSolve = [[0,0,0,3,0,0,0,0,0],
                   [0,0,0,7,0,0,3,0,0],

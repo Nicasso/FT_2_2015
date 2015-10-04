@@ -1,18 +1,6 @@
-module Lab5 where
+module Assignment3 where
 
-import Data.List
-import System.Random
 import Lecture5
-
--- 1.
-
--- See Assignment1.hs
-
--- 2.
-
--- See Assignment2.hs
-
--- 3.
 
 -- TestMinimal will generate a random Sudoku problem P using the code from the lecture. 
 -- It will test if the generated problem is minimal, which means that the original problem P has only one unique solution 
@@ -22,6 +10,10 @@ import Lecture5
 -- We then check if the Sudoku P' still has a unique solution using uniqueSol when we remove the the first hint, if so the Suduku is not minimal.
 -- If the Sudoku with a missing hint is doesn't have a unique solution, we try it again but only then we remove only the second hint
 -- And if all P' of P don't have a unique solutions, the Soduko P is minimal.
+
+-- Run using: testMinimal
+
+-- Time spent: 2 hours
 
 testMinimal :: IO ()
 testMinimal = do [r] <- rsolveNs [emptyN]
@@ -37,27 +29,3 @@ testMinimal = do [r] <- rsolveNs [emptyN]
 tryRemovingHint :: Node -> [(Row,Column)] -> Int -> Bool
 tryRemovingHint s rc x | uniqueSol ( eraseN s (rc!!x) ) == True = False
                        | uniqueSol ( eraseN s (rc!!x) ) == False = if (length rc > x+1) then tryRemovingHint s rc (x+1) else True
-
--- 4.
-
-allBlockies :: [[(Row,Column)]]
-allBlockies = [[(r,c)| r <- b1, c <- b2 ] | b1 <- blocks, b2 <- blocks]
-
-minimalizeBlocks :: Node -> [[(Row,Column)]] -> Int -> Node
-minimalizeBlocks n [] m = n
-minimalizeBlocks n _ 0 = n
-minimalizeBlocks n (x:xs) m | uniqueSol n' = minimalizeBlocks n' xs (m-1)
-                            | otherwise = minimalizeBlocks n xs m
-    where n' = foldl eraseN n x
-
-genProblem2 :: Node -> IO Node
-genProblem2 n = do 
-                  let m = minimalizeBlocks n allBlockies 9
-                  o <- randomize (filledPositions (fst m))
-                  return (minimalize m o)
-
-main2 :: IO ()
-main2 = do
-          [r] <- rsolveNs [emptyN]
-          s  <- genProblem2 r
-          showNode s

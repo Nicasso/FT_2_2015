@@ -5,11 +5,20 @@ where
 import Data.List
 import System.Random
 
--- @TODO Explain here
+-- about extendability: the way we refactored the code (adding what is on the assignment), 
+--                      we think that in terms of extendability, 
+--                      it's almost the same work in both to add new constraints.
+--                      Maybe we missed something?
 
--- Run using: ??????
+-- Which of the two versions is easier to modify for NRC sudokus? 
+--      We spent almost the same time changing each version to NRC, 
+--      so we think both have the same dificulty
 
--- Time spent: ?????????????? hours
+-- Which of the two versions is more efficient? 1st version (see img1.png)
+
+-- Run using: main
+
+-- Time spent: 3 hours
 
 type Row    = Int 
 type Column = Int 
@@ -203,14 +212,6 @@ freeAtPos' :: Sudoku -> Position -> Constrnt -> [Value]
 freeAtPos' s (r,c) xs = if (filter (elem (r,c)) xs == []) then values else
                          let ys = filter (elem (r,c)) xs 
                          in foldl1 intersect (map ((values \\) . map s) ys)
-
-
-{-
-
-efficiency: (see Assignment2.png)
-
--}
-
 
 
 

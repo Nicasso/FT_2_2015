@@ -62,9 +62,6 @@
   expM ::  Integer -> Integer -> Integer -> Integer
   expM x y = rem (x^y)
 
-  exM :: Integer -> Integer -> Integer -> Integer
-  exM = expM -- to be replaced by a fast version
-
   prime_test_F :: Integer -> IO Bool
   prime_test_F n = do 
      a <- randomRIO (1, n-1) :: IO Integer

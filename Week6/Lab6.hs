@@ -5,7 +5,23 @@ import System.Random
 import Lecture6
 
 -- Assignment 1
+exM :: Integer -> Integer -> Integer -> Integer
+exM x y z = (multiplyList (filterList (makeList x y z 1) y)) `mod` z
 
+
+makeList :: Integer -> Integer -> Integer -> Integer -> [(Integer,Integer)] 
+makeList x y z a | a > y = []
+                 | otherwise = makeList x y z (a * 2) ++ [(a,(rem (x^a) z))]
+
+filterList :: [(Integer,Integer)] -> Integer -> [Integer]
+filterList [] _ = []
+filterList (x:xs) y | y == 0 = []
+                    | (fst x) <= y = [(snd x)] ++ filterList xs (y - (fst x))
+                    | otherwise = filterList xs y
+
+multiplyList :: [Integer] -> Integer
+multiplyList [] = 1
+multiplyList (x:xs) = x * multiplyList xs
 
 
 -- Assignment 2

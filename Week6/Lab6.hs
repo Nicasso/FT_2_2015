@@ -14,7 +14,10 @@ import Lecture6
 
 -- Assignment 3
 
+noPrime n = factors n /= [n]
 
+composites :: [Integer]
+composites = 1 : 2 : filter noPrime [3..]
 
 -- Assignment 4
 

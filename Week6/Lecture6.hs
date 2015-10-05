@@ -64,22 +64,17 @@
 
   -- Assignment 1
   exM :: Integer -> Integer -> Integer -> Integer
-  exM x y z = (multiplyList (filterList (makeList x y z 1) y)) `mod` z
-
+  exM x y z = (useList( makeList x y z 1) y) `mod` z
 
   makeList :: Integer -> Integer -> Integer -> Integer -> [(Integer,Integer)] 
   makeList x y z a | a > y = []
                    | otherwise = makeList x y z (a * 2) ++ [(a,(rem (x^a) z))]
 
-  filterList :: [(Integer,Integer)] -> Integer -> [Integer]
-  filterList [] _ = []
-  filterList (x:xs) y | y == 0 = []
-                      | (fst x) <= y = [(snd x)] ++ filterList xs (y - (fst x))
-                      | otherwise = filterList xs y
-
-  multiplyList :: [Integer] -> Integer
-  multiplyList [] = 1
-  multiplyList (x:xs) = x * multiplyList xs
+  useList :: [(Integer,Integer)] -> Integer -> Integer
+  useList [] _ = 1
+  useList (x:xs) y | y == 0 = 1
+                   | (fst x) <= y = (snd x) * useList xs (y - (fst x))
+                   | otherwise = useList xs y
   ---------------
 
   prime_test_F :: Integer -> IO Bool

@@ -45,14 +45,15 @@ composites = filter noPrime [1..]
 
 -- Time spent: 1.5 hours
 
-testComposites :: Int -> [Integer] -> IO ()
-testComposites k (x:xs) = do 
+testValuesOnFermat :: Int -> [Integer] -> IO ()
+testValuesOnFermat k [] = print ("Done")
+testValuesOnFermat k (x:xs) = do 
                             a <- prime_tests_F k x
                             if a then do
                               print (show x ++ " passed")
-                              testComposites k xs
+                              testValuesOnFermat k xs
                               else do
-                                testComposites k xs
+                                testValuesOnFermat k xs
 
 -- Assignment 5
 
@@ -65,7 +66,15 @@ carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) |
 
 -- Assignment 6
 
-
+testValuesOnMiller :: Int -> [Integer] -> IO ()
+testValuesOnMiller k [] = print ("Done")
+testValuesOnMiller k (x:xs) = do 
+                            a <- primeMR k x
+                            if a then do
+                              print (show x ++ " passed")
+                              testValuesOnMiller k xs
+                              else do
+                                testValuesOnMiller k xs
 
 -- Assignment 7
 

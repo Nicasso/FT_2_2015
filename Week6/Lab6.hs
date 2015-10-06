@@ -25,7 +25,7 @@ composites = filter noPrime [1..]
 -- The least composite number that fools the check is 4.
 -- And by increasing k the numbers will get larger faster and because of that the calculations take longer.
 
--- Run using: testComposites 1 composites (or testComposites 2 composites or testComposites 3 composites, whatever your heart desires)
+-- Run using: testValuesOnFermat 1 composites (or testValuesOnFermat 2 composites or testValuesOnFermat 3 composites, whatever your heart desires)
 
 -- Time spent: 1.5 hours
 

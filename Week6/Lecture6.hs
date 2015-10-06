@@ -5,6 +5,10 @@
   import Data.List
   import System.Random
 
+  -- We need these
+  import Data.Bits
+  import Data.Time
+
   factors_naive :: Integer -> [Integer]
   factors_naive n = factors' n 2 where 
     factors' 1 _ = []
@@ -62,20 +66,41 @@
   expM ::  Integer -> Integer -> Integer -> Integer
   expM x y = rem (x^y)
 
-  -- Assignment 1
+  -- Start Assignment 1
+
+  -- REWRITE THIS ONE! THIS ONE IS WAY FASTER!
+
+  --exM :: Integer -> Integer -> Integer -> Integer
+  --exM x 0 z = 1
+  --exM x y z = t * exM ((x * x) `mod` z) (shiftR y 1) z `mod` z
+  --         where t = if testBit y 0 then x `mod` z else 1
+
   exM :: Integer -> Integer -> Integer -> Integer
-  exM x y z = (useList( makeList x y z 1) y) `mod` z
+  exM x y z | even y = exM2Evenhelper x (factors y) z 1
+            | otherwise = (exM2Oddhelper x (reverse (toBin y)) z 0) `rem` z
 
-  makeList :: Integer -> Integer -> Integer -> Integer -> [(Integer,Integer)] 
-  makeList x y z a | a > y = []
-                   | otherwise = makeList x y z (a * 2) ++ [(a,(rem (x^a) z))]
+  exM2Oddhelper :: Integer -> [Integer] -> Integer -> Integer -> Integer
+  exM2Oddhelper x [] z k = 1
+  exM2Oddhelper x (y:ys) z k | y == 1 = (x^(2^k) `rem` z) * exM2Oddhelper x ys z (k+1)
+                             | y == 0 = exM2Oddhelper x ys z (k+1)
 
-  useList :: [(Integer,Integer)] -> Integer -> Integer
-  useList [] _ = 1
-  useList (x:xs) y | y == 0 = 1
-                   | (fst x) <= y = (snd x) * useList xs (y - (fst x))
-                   | otherwise = useList xs y
-  ---------------
+  exM2Evenhelper :: Integer -> [Integer] -> Integer -> Integer -> Integer
+  exM2Evenhelper x [] z q = q
+  exM2Evenhelper x (y:ys) z 1 = exM2Evenhelper x ys z ((x^y) `rem` z)
+  exM2Evenhelper x (y:ys) z q = exM2Evenhelper x ys z ((q*q) `rem` z)
+
+  toBin 0 = [0]
+  toBin n = reverse (helper n)
+
+  helper 0 = []
+  helper n = (n `mod` 2) : helper (n `div` 2)
+
+  -- This is the old version
+
+  exM' :: Integer -> Integer -> Integer -> Integer
+  exM' = expM -- to be replaced by a fast version
+
+  -- End Assignment 1
 
   prime_test_F :: Integer -> IO Bool
   prime_test_F n = do 

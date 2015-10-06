@@ -4,25 +4,59 @@ import Data.List
 import System.Random
 import Lecture6
 
+import Data.Bits
+import Data.Time
+
 -- Assignment 1
 
---(see Lecture6.hs)
+-- See the Lecture6.hs file for the implementation of exM
+
+{-
+
+Implementation of Robin and Andre
+
+exM' :: Integer -> Integer -> Integer -> Integer
+exM' x y z = (useList( makeList x y z 1) y) `mod` z
+
+makeList :: Integer -> Integer -> Integer -> Integer -> [(Integer,Integer)] 
+makeList x y z a | a > y = []
+                 | otherwise = makeList x y z (a * 2) ++ [(a,(rem (x^a) z))]
+
+useList :: [(Integer,Integer)] -> Integer -> Integer
+useList [] _ = 1
+useList (x:xs) y | y == 0 = 1
+                 | (fst x) <= y = (snd x) * useList xs (y - (fst x))
+                 | otherwise = useList xs y
+-}
 
 -- Assignment 2
 
-
+testExmSpeed :: IO ()
+testExmSpeed = do
+                 x <- randomRIO (0,1000000000) :: IO Integer
+                 y <- randomRIO (10000000,20000000) :: IO Integer
+                 z <- randomRIO (2,20) :: IO Integer
+                 print ("Calculate: "++show x++"^"++show y++" `mod` "++show z)
+                 start1 <- getCurrentTime
+                 print ("Result exM: "++show(exM x y z))
+                 end1 <- getCurrentTime
+                 print ("Took "++show (diffUTCTime end1 start1)++"econds")
+                 start2 <- getCurrentTime
+                 print ("Result exM': "++show(exM' x y z))
+                 end2 <- getCurrentTime
+                 print ("Took "++show (diffUTCTime end2 start2)++"econds")
 
 -- Assignment 3
-
-noPrime :: Integer -> Bool
-noPrime n = factors n /= [n]
 
 composites :: [Integer]
 composites = filter noPrime [1..]
 
+noPrime :: Integer -> Bool
+noPrime n = factors n /= [n]
+
 -- Assignment 4
 
--- The least composite number that fools the check is 4.
+-- The least composite number that fools the check is with k = 1, k = 2, and k = 3 is the number 4.
 -- And by increasing k the numbers will get larger faster and because of that the calculations take longer.
 
 -- Run using: testValuesOnFermat 1 composites (or testValuesOnFermat 2 composites or testValuesOnFermat 3 composites, whatever your heart desires)
@@ -62,4 +96,24 @@ testValuesOnMiller k (x:xs) = do
 
 -- Assignment 7
 
+discoverMersennePrimes :: IO ()
+discoverMersennePrimes = discoverMersennePrimesHelper primes
 
+discoverMersennePrimesHelper :: [Integer] -> IO ()
+discoverMersennePrimesHelper (x:xs) = do
+                                  a <- discoverMersennePrimesChecker x
+                                  if a then
+                                    do
+                                      print (show x ++" is a Mersenne prime")
+                                      discoverMersennePrimesHelper xs
+                                    else
+                                      do
+                                        discoverMersennePrimesHelper xs
+
+discoverMersennePrimesChecker :: Integer -> IO Bool
+discoverMersennePrimesChecker x = do
+                                   b <- prime_tests_F 1 ((2^x)-1)
+                                   if b == True then 
+                                     return True
+                                     else
+                                       return False

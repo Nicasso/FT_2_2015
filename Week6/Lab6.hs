@@ -94,7 +94,7 @@ discoverMersennePrimesHelper (x:xs) = do
 
 discoverMersennePrimesChecker :: Integer -> IO Bool
 discoverMersennePrimesChecker x = do
-                                   b <- prime_tests_F 1 ((2^x)-1)
+                                   b <- primeMR 1 ((2^x)-1)
                                    if b == True then 
                                      return True
                                      else

@@ -24,7 +24,7 @@ testExmSpeed = do
                  end1 <- getCurrentTime
                  print ("Took "++show (diffUTCTime end1 start1)++"econds")
                  start2 <- getCurrentTime
-                 print ("Result exM': "++show(exM' x y z))
+                 print ("Result expM: "++show(expM x y z))
                  end2 <- getCurrentTime
                  print ("Took "++show (diffUTCTime end2 start2)++"econds")
 
@@ -38,7 +38,7 @@ noPrime n = factors n /= [n]
 
 -- Assignment 4
 
--- The least composite number that fools the check is with k = 1, k = 2, and k = 3 is the number 4.
+-- The least composite number that fools the check, with k = 1, k = 2, and k = 3, is the number 4.
 -- And by increasing k the numbers will get larger faster and because of that the calculations take longer.
 
 -- Run using: testValuesOnFermat 1 composites (or testValuesOnFermat 2 composites or testValuesOnFermat 3 composites, whatever your heart desires)

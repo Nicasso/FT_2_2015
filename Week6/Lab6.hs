@@ -57,6 +57,8 @@ testValuesOnFermat k (x:xs) = do
 
 -- Assignment 5
 
+-- run: testValuesOnFermat 1 carmichael
+
 carmichael :: [Integer]
 carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) | 
       k <- [2..], 

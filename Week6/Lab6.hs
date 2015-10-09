@@ -19,11 +19,11 @@ import Data.Time
 
 -- Test result:
 
--- "Calculate: 663846366^12046671 `mod` 15"
--- "Result exM: 6"
--- "Took 0.0010022seconds"
--- "Result exM': 6"
--- "Took 68.1383009seconds"
+-- "Calculate: 879724070^13402614 `mod` 17"
+-- "Result exM: 2"
+-- "Took 0.001seconds"
+-- "Result exM': 2"
+-- "Took 12.1721209seconds"
 
 -- Run using: testExmSpeed
 
@@ -84,6 +84,7 @@ testValuesOnFermat k (x:xs) = do
 -- The Carmichael numbers contain this property and for that reason they pass Fermat's test without being actual primes.
 
 -- Run using: carmichael
+-- Test using: testValuesOnFermat 1 carmichael
 
 carmichael :: [Integer]
 carmichael = [ (6*k+1)*(12*k+1)*(18*k+1) | 

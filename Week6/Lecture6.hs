@@ -66,21 +66,30 @@
   expM ::  Integer -> Integer -> Integer -> Integer
   expM x y = rem (x^y)
 
+  exM' :: Integer -> Integer -> Integer -> Integer
+  exM' = expM -- to be replaced by a fast version
+
   -- Start Assignment 1
 
   exM :: Integer -> Integer -> Integer -> Integer
-  exM x y z = rem (useList (makeList y z 1 (rem x z)) y) z
+  exM x y z = (exM2helper x (reverse (toBinary y)) z 0 0) `rem` z
 
-  makeList :: Integer -> Integer -> Integer -> Integer -> [(Integer,Integer)] 
-  makeList y z a f | a > y = []
-                   | a == 1 = makeList y z (a*2) (f*f) ++ [(a, f)] 
-                   | otherwise = makeList y z (a*2) (f*f) ++ [(a, (rem f z))]
+  exM2helper :: Integer -> [Integer] -> Integer -> Integer -> Integer -> Integer
+  exM2helper x [] z k q = 1
+  exM2helper x (y:ys) z k q | y == 1 = if k == 0 then 
+                                                   let q' = ((x^(2^k) `rem` z)) in q' * exM2helper x ys z (k+1) q'
+                                                 else 
+                                                   let q' = ((q*q `rem` z) `rem` z) in q' * exM2helper x ys z (k+1) q'
+                            | y == 0 = if k == 0 then 
+                                                   let q' = ((x^(2^k) `rem` z)) in exM2helper x ys z (k+1) q'
+                                                 else 
+                                                   let q' = ((q*q `rem` z) `rem` z) in exM2helper x ys z (k+1) q'
 
-  useList :: [(Integer,Integer)] -> Integer -> Integer
-  useList [] _ = 1
-  useList (x:xs) y | y == 0 = 1
-                   | (fst x) <= y = (snd x) * useList xs (y - (fst x))
-                   | otherwise = useList xs y
+  toBinary 0 = [0]
+  toBinary n = reverse (binaryHelper n)
+
+  binaryHelper 0 = []
+  binaryHelper n = (n `mod` 2) : binaryHelper (n `div` 2)
 
   -- End Assignment 1
 

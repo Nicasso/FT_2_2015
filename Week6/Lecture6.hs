@@ -71,20 +71,27 @@
 
   -- Start Assignment 1
 
+  -- So the exM function works as follows.
+  -- We start by converting the y value to a binary array which we reverse so we can start at the rightmost digit.
+  -- So now we pass x, y as a binary list, z, k as 0, and at last q as zero (they will be explained later).
+  -- In case the binary value (y) is 1, then we need to use its calculations and multiply them with the rest of the list
+  -- If y is 0, then we skip the value and continue with the rest of the list of binary values.
+  -- So k is the position of the current binary value in the list, thus if k is equal to 0, we have to calculate the initial value of ((x^(2^k) `rem` z)).
+  -- For all the later calculations we can just simply do ((q*q `rem` z) `rem` z).
+  -- By putting the value of the calculation in q', we can pass that value q' to the next iteration.
+  -- This way we only have to do calculations just once.
+  -- When the binary list is empty we just return 1 so that the result of the calculation will be returned.
+
   exM :: Integer -> Integer -> Integer -> Integer
   exM x y z = (exM2helper x (reverse (toBinary y)) z 0 0) `rem` z
 
   exM2helper :: Integer -> [Integer] -> Integer -> Integer -> Integer -> Integer
   exM2helper x [] z k q = 1
-  exM2helper x (y:ys) z k q | y == 1 = if k == 0 then 
-                                                   let q' = ((x^(2^k) `rem` z)) in q' * exM2helper x ys z (k+1) q'
-                                                 else 
-                                                   let q' = ((q*q `rem` z) `rem` z) in q' * exM2helper x ys z (k+1) q'
-                            | y == 0 = if k == 0 then 
-                                                   let q' = ((x^(2^k) `rem` z)) in exM2helper x ys z (k+1) q'
-                                                 else 
-                                                   let q' = ((q*q `rem` z) `rem` z) in exM2helper x ys z (k+1) q'
-
+  exM2helper x (y:ys) z k q | y == 1 && k == 0 = let q' = ((x^(2^k) `rem` z)) in q' * exM2helper x ys z (k+1) q' 
+                            | y == 1 && k > 0 = let q' = ((q*q `rem` z) `rem` z) in q' * exM2helper x ys z (k+1) q'
+                            | y == 0 && k == 0 = let q' = ((x^(2^k) `rem` z)) in exM2helper x ys z (k+1) q' 
+                            | y == 0 && k > 0 = let q' = ((q*q `rem` z) `rem` z) in exM2helper x ys z (k+1) q'
+                                                   
   toBinary 0 = [0]
   toBinary n = reverse (binaryHelper n)
 

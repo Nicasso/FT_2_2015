@@ -1,1 +1,1 @@
-Software Testing assignments from team FT_2: Nico de Groot, Robin Kulhan, Andre Tavares
+Software Testing assignments from team FT_2.
